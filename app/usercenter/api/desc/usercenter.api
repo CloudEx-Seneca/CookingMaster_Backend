@@ -1,0 +1,155 @@
+syntax = "v1"
+
+info (
+	title: "User Center API"
+	desc: "api description for user center"
+	author: "haojie fu"
+	email: "fu-haojie@myseneca.ca"
+)
+
+type (
+	RegisterReq {
+		Email string `json:"email"`
+		Password string `json:"password"`
+	}
+	RegisterResp {
+		RegisterToken string `json:"token"`
+		RegisterExpire string  `json:"expire"`
+	}
+)
+
+type (
+	VarifyRegisterReq {
+		RegisterToken string `form:"token"`
+	}
+	VarifyRegisterResp {
+	}
+)
+
+type (
+	LoginReq {
+		Email string `json:"email"`
+		Password string `json:"password"`
+	}
+	LoginResp {
+		AccessToken string `json:"access_token"`
+		RefreshToken string `json:"refresh_token"`
+		AccessExpire int64 `json:"access_expire"`
+		RefreshAfter int64 `json:"refresh_after"`
+	}
+)
+
+type (
+	LogoutReq {
+		RefreshToken string `json:"refresh_token"`
+	}
+	LogoutResp {
+	}
+)
+
+type (
+	PasswordResetReq {
+		Email string `json:"email"`
+	}
+	PasswordResetResp {
+		ResetToken string `json:"token"`
+		ResetExipre int64 `json:"expire"`
+	}
+)
+
+type (
+	ResetPasswordReq {
+		ResetToken string `json:"token"`
+		Password string `json:"password"`
+	}
+	ResetPasswordResp {
+	}
+)
+
+type (
+	RefreshTokenReq {
+		RefreshToken string `json:"refresh_token"`
+	}
+	RefreshTokenResp {
+		AccessToken string `json:"access_token"`
+		AccessExpire int64 `json:"access_expire"`
+		RefreshAfter int64 `json:"refresh_after"`
+	}
+)
+
+@server(
+	prefix: usercenter/v1
+	group: user
+)
+service usercenter-api {
+	@handler Register
+	post /user/register (RegisterReq) returns (RegisterResp)
+
+	@handler VarifyRegister
+	get /user/varifyregister (VarifyRegisterReq) returns (VarifyRegisterResp)
+
+	@handler Login
+	post /user/login (LoginReq) returns (LoginResp)
+
+	@handler Logout
+	post /user/logout (LogoutReq) returns (LogoutResp)
+
+	@handler PasswordReset
+	post /user/passwordreset (PasswordResetReq) returns (PasswordResetResp)
+
+	@handler ResetPassword
+	post /user/resetpassword (ResetPasswordReq) returns (ResetPasswordResp)
+
+	@handler RefreshToken
+	post /user/refreshtoken (RefreshTokenReq) returns (RefreshTokenResp)
+}
+
+type User {
+	UserId int64 `json:"user_id"`
+	Email string `json:"email"`
+	Nickname string `json:"nickname"`
+	Sex int64 `json:"sex"`
+	Avatar string `json:"avatar"`
+	Info string `json:"info"`
+}
+
+type (
+	UserDetailReq {
+	}
+	UserDetailResp {
+		UserDetail User `json:"user"`
+	}
+)
+
+type (
+	UserUpdateReq {
+		UserDetail User `json:"user"`
+	}
+	UserUpdateResp {
+	}
+)
+
+type (
+	UploadAvatarReq {
+	}
+	UploadAvatarResp {
+		AvatarUrl string `json:"avatar_url"`
+	}
+)
+
+@server(
+	prefix: usercenter/v1
+	group: user
+	jwt: JwtAuth
+)
+service usercenter-api {
+	@handler UserDetail
+	post /user/detail (UserDetailReq) returns (UserDetailResp)
+
+	@handler UserUpdate
+	post /user/update (UserUpdateReq) returns (UserUpdateResp)
+
+	@handler AvatarUpload
+	post /user/avatarupload (UploadAvatarReq) returns (UploadAvatarResp)
+}
+
