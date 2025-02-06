@@ -1,20 +1,20 @@
 syntax = "v1"
 
 info (
-	title: "User Center API"
-	desc: "api description for user center"
+	title:  "User Center API"
+	desc:   "api description for user center"
 	author: "haojie fu"
-	email: "fu-haojie@myseneca.ca"
+	email:  "fu-haojie@myseneca.ca"
 )
 
 type (
 	RegisterReq {
-		Email string `json:"email"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 	RegisterResp {
-		RegisterToken string `json:"token"`
-		RegisterExpire string  `json:"expire"`
+		RegisterToken  string `json:"token"`
+		RegisterExpire string `json:"expire"`
 	}
 )
 
@@ -22,20 +22,19 @@ type (
 	VarifyRegisterReq {
 		RegisterToken string `form:"token"`
 	}
-	VarifyRegisterResp {
-	}
+	VarifyRegisterResp  {}
 )
 
 type (
 	LoginReq {
-		Email string `json:"email"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 	LoginResp {
-		AccessToken string `json:"access_token"`
+		AccessToken  string `json:"access_token"`
 		RefreshToken string `json:"refresh_token"`
-		AccessExpire int64 `json:"access_expire"`
-		RefreshAfter int64 `json:"refresh_after"`
+		AccessExpire int64  `json:"access_expire"`
+		RefreshAfter int64  `json:"refresh_after"`
 	}
 )
 
@@ -43,8 +42,7 @@ type (
 	LogoutReq {
 		RefreshToken string `json:"refresh_token"`
 	}
-	LogoutResp {
-	}
+	LogoutResp  {}
 )
 
 type (
@@ -52,18 +50,17 @@ type (
 		Email string `json:"email"`
 	}
 	PasswordResetResp {
-		ResetToken string `json:"token"`
-		ResetExipre int64 `json:"expire"`
+		ResetToken  string `json:"token"`
+		ResetExipre int64  `json:"expire"`
 	}
 )
 
 type (
 	ResetPasswordReq {
 		ResetToken string `json:"token"`
-		Password string `json:"password"`
+		Password   string `json:"password"`
 	}
-	ResetPasswordResp {
-	}
+	ResetPasswordResp  {}
 )
 
 type (
@@ -71,15 +68,15 @@ type (
 		RefreshToken string `json:"refresh_token"`
 	}
 	RefreshTokenResp {
-		AccessToken string `json:"access_token"`
-		AccessExpire int64 `json:"access_expire"`
-		RefreshAfter int64 `json:"refresh_after"`
+		AccessToken  string `json:"access_token"`
+		AccessExpire int64  `json:"access_expire"`
+		RefreshAfter int64  `json:"refresh_after"`
 	}
 )
 
-@server(
+@server (
 	prefix: usercenter/v1
-	group: user
+	group:  user
 )
 service usercenter-api {
 	@handler Register
@@ -105,17 +102,17 @@ service usercenter-api {
 }
 
 type User {
-	UserId int64 `json:"user_id"`
-	Email string `json:"email"`
-	Nickname string `json:"nickname"`
-	Sex int64 `json:"sex"`
-	Avatar string `json:"avatar"`
-	Info string `json:"info"`
+	UserId    int64  `json:"user_id"`
+	Email     string `json:"email"`
+	Status    int64  `json:"status"`
+	Nickname  string `json:"nickname"`
+	Sex       int64  `json:"sex"`
+	AvatarUrl string `json:"avatar_url"`
+	Info      string `json:"info"`
 }
 
 type (
-	UserDetailReq {
-	}
+	UserDetailReq  {}
 	UserDetailResp {
 		UserDetail User `json:"user"`
 	}
@@ -125,22 +122,20 @@ type (
 	UserUpdateReq {
 		UserDetail User `json:"user"`
 	}
-	UserUpdateResp {
-	}
+	UserUpdateResp  {}
 )
 
 type (
-	UploadAvatarReq {
-	}
+	UploadAvatarReq  {}
 	UploadAvatarResp {
 		AvatarUrl string `json:"avatar_url"`
 	}
 )
 
-@server(
+@server (
 	prefix: usercenter/v1
-	group: user
-	jwt: JwtAuth
+	group:  user
+	jwt:    JwtAuth
 )
 service usercenter-api {
 	@handler UserDetail

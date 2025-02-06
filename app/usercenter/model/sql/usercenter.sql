@@ -1,31 +1,35 @@
-CREATE DATABASE `usercenter`;
-USE `usercenter`;
+create database if not exists `usercenter`;
+use `usercenter`;
 
-CREATE TABLE users (
-                       id            BIGINT PRIMARY KEY,  -- Snowflake ID
-                       email         VARCHAR(255) UNIQUE NOT NULL,
-                       password_hash VARCHAR(255) NOT NULL,  -- Bcrypt or Argon2 hash
-                       nickname      VARCHAR(100) UNIQUE,
-                       sex           TINYINT CHECK (sex IN (0,1,2)),  -- 0: Unknown, 1: Male, 2: Female
-                       avatar_url    VARCHAR(500),
-                       info          TEXT,
-                       created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                       updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+drop table if exists `users`;
+create table `users` (
+    id          bigint not null comment 'snowflake ID',
+    email       varchar(64) not null comment 'user email',
+    password    varchar(255) not null comment 'argon2 hash',
+    status      tinyint default 0 comment '0:unvarified, 1:varified',
+    nickname    varchar(64) comment 'user nickname',
+    sex         tinyint default 0 comment '0:unknown, 1:male, 2:female',
+    avatar_url  varchar(255) comment 'avatar url',
+    info        varchar(255) comment 'user info',
+    created_at  timestamp default current_timestamp,
+    updated_at  timestamp default current_timestamp on update current_timestamp,
 
-                       INDEX idx_email (email),
-                       INDEX idx_nickname (nickname)
+    primary key (id),
+    unique key idx_email (email),
+    unique key idx_nickname (nickname)
 );
 
-CREATE TABLE user_tokens (
-                             id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-                             user_id    BIGINT NOT NULL,
-                             token      VARCHAR(500) NOT NULL,
-                             type       TINYINT NOT NULL,  -- 1: Refresh, 2: Reset, 3: Register
-                             status     TINYINT NOT NULL DEFAULT 1,  -- 1: Active, 2: Used, 3: Revoked, 4: Expired
-                             expires_at TIMESTAMP NOT NULL,
-                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+drop table `user_tokens`;
+create table `user_tokens` (
+    id          bigint not null auto_increment comment 'token id',
+    user_id     bigint not null comment 'user id',
+    token       varchar(512) not null comment 'user token',
+    type        tinyint not null comment '0:register, 1:reset, 2:refresh',
+    status      tinyint not null default 0 comment '0:active, 1:used, 2:expired, 3:revoked',
+    expire      datetime not null comment 'token expire',
+    created_at  timestamp default current_timestamp,
+    updated_at  timestamp default current_timestamp on update current_timestamp,
 
-                             INDEX idx_user_type (user_id, type),
-                             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+    primary key (id),
+    unique key idx_user_type (user_id, type)
+)

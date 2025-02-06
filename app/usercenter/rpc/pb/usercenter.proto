@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package usercenter;
+option go_package="./usercenter";
+
+message GenerateTokenReq {
+  int64 userId = 1;
+  int64 tokenType = 2;
+}
+
+message GenerateTokenResp {
+  string token = 1;
+  int64 expire = 2;
+}
+
+message VarifyTokenReq {
+  string token = 1;
+}
+
+message VarifyTokenResp {
+  int64 code = 1;
+}
+
+service Usercenter {
+  rpc GenerateToken(GenerateTokenReq) returns(GenerateTokenResp);
+  rpc VarifyToken(VarifyTokenReq) returns(VarifyTokenResp);
+}
