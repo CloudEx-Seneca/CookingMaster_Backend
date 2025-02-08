@@ -4,7 +4,7 @@ var message map[uint32]string
 
 func init() {
 	message = make(map[uint32]string)
-	message[OK] = "success"
+	message[OK] = "login successful"
 	message[SERVER_COMMON_ERROR] = "server failed"
 	message[REQUEST_PARAM_ERROR] = "request parameter error"
 	message[TOKEN_EXPIRE_ERROR] = "token expired"
