@@ -49,8 +49,8 @@ type (
 		Type      int64     `db:"type"`    // 0:register, 1:reset, 2:refresh
 		Status    int64     `db:"status"`  // 0:active, 1:used, 2:expired, 3:revoked
 		Expire    time.Time `db:"expire"`  // token expire
-		CreatedAt time.Time `db:"created_at"`
-		UpdatedAt time.Time `db:"updated_at"`
+		CreatedAt time.Time `db:"created_at"`  // Time created
+		UpdatedAt time.Time `db:"updated_at"`  // Time of last token update
 	}
 )
 
