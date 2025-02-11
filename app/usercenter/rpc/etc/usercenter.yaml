@@ -1,0 +1,15 @@
+Name: usercenter.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: usercenter.rpc
+
+JwtAuth:
+  AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0
+  ShortExpire: 3600
+  LongExpire: 2592000
+
+DataSource: root:haojiefu@tcp(localhost:3306)/usercenter
+Cache:
+  - Host: localhost:6379
