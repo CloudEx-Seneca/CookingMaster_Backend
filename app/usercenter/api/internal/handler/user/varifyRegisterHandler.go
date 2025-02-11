@@ -1,6 +1,7 @@
 package user
 
 import (
+	"CookingMaster_Backend/pkg/result"
 	"net/http"
 
 	"CookingMaster_Backend/app/usercenter/api/internal/logic/user"
@@ -13,16 +14,12 @@ func VarifyRegisterHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.VarifyRegisterReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			result.ParamErrorResult(r, w, err)
 			return
 		}
 
 		l := user.NewVarifyRegisterLogic(r.Context(), svcCtx)
 		resp, err := l.VarifyRegister(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		result.HttpResult(r, w, resp, err)
 	}
 }

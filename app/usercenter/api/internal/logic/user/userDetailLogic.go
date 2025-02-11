@@ -26,5 +26,5 @@ func NewUserDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.UserDetailResp, err error) {
 	// todo: add your logic here and delete this line
 
-	return
+	return &types.UserDetailResp{}, nil
 }

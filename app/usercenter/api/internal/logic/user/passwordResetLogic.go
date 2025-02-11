@@ -26,5 +26,5 @@ func NewPasswordResetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pas
 func (l *PasswordResetLogic) PasswordReset(req *types.PasswordResetReq) (resp *types.PasswordResetResp, err error) {
 	// todo: add your logic here and delete this line
 
-	return
+	return &types.PasswordResetResp{}, nil
 }

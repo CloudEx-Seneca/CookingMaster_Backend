@@ -26,5 +26,5 @@ func NewAvatarUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Avat
 func (l *AvatarUploadLogic) AvatarUpload(req *types.UploadAvatarReq) (resp *types.UploadAvatarResp, err error) {
 	// todo: add your logic here and delete this line
 
-	return
+	return &types.UploadAvatarResp{}, nil
 }

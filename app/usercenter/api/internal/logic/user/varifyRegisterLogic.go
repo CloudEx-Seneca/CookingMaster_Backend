@@ -26,5 +26,5 @@ func NewVarifyRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Va
 func (l *VarifyRegisterLogic) VarifyRegister(req *types.VarifyRegisterReq) (resp *types.VarifyRegisterResp, err error) {
 	// todo: add your logic here and delete this line
 
-	return
+	return &types.VarifyRegisterResp{}, nil
 }
