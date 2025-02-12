@@ -48,7 +48,7 @@ type RegisterReq struct {
 
 type RegisterResp struct {
 	RegisterToken  string `json:"token"`
-	RegisterExpire string `json:"expire"`
+	RegisterExpire int64  `json:"expire"`
 }
 
 type ResetPasswordReq struct {

@@ -50,7 +50,7 @@ func (l *GenerateTokenLogic) GenerateToken(in *usercenter.GenerateTokenReq) (*us
 	}
 
 	if in.TokenType == model.RegisterTokenType || in.TokenType == model.ResetTokenType || in.TokenType == model.RefreshTokenType {
-		l.svcCtx.TokenModel.Update(l.ctx, &model.UserTokens{
+		l.svcCtx.TokenModel.Insert(l.ctx, &model.UserTokens{
 			UserId: in.UserId,
 			Type:   in.TokenType,
 			Token:  token,
