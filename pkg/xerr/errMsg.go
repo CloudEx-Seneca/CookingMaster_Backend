@@ -13,6 +13,7 @@ func init() {
 	message[DB_UPDATE_AFFECTED_ZERO_ERROR] = "update affected zero"
 	message[ONETIME_TOKEN_OVERUSED_ERROR] = "onetime token overused"
 	message[TOKEN_REVOKED_ERROR] = "token revoked"
+	message[TOKEN_INVALID_ERROR] = "token invalid"
 }
 
 func MapErrMsg(code uint32) string {

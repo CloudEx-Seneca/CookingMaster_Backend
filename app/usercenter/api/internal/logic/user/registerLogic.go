@@ -5,6 +5,7 @@ import (
 	"CookingMaster_Backend/app/usercenter/api/internal/types"
 	"CookingMaster_Backend/app/usercenter/model"
 	"CookingMaster_Backend/app/usercenter/rpc/usercenterClient"
+	"CookingMaster_Backend/pkg/email"
 	"context"
 	"crypto/rand"
 	"crypto/sha256"
@@ -45,6 +46,10 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 		logx.Errorf("generate token error: %v", err)
 		return &types.RegisterResp{}, err
 	}
+
+	subject := email.REGISTER_EMAIL_SUBJECT
+	body := fmt.Sprintf(email.REGISTER_EMAIL_BODY_TEMPLATE, gtResp.Token)
+	go email.SendEmail(req.Email, subject, body)
 
 	passwordHash, err := GeneratePassword(req.Password)
 	if err != nil {

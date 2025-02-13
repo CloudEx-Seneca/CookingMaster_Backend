@@ -2,14 +2,14 @@ package logic
 
 import (
 	"CookingMaster_Backend/app/usercenter/model"
+	"CookingMaster_Backend/app/usercenter/rpc/internal/svc"
+	"CookingMaster_Backend/app/usercenter/rpc/usercenter"
 	"CookingMaster_Backend/pkg/ctxdata"
 	"CookingMaster_Backend/pkg/xerr"
 	"context"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
-
-	"CookingMaster_Backend/app/usercenter/rpc/internal/svc"
-	"CookingMaster_Backend/app/usercenter/rpc/usercenter"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -32,7 +32,7 @@ func NewVarifyTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Varif
 }
 
 func (l *VarifyTokenLogic) VarifyToken(in *usercenter.VarifyTokenReq) (*usercenter.VarifyTokenResp, error) {
-	secretKey := l.svcCtx.Config.JwtAuth.AccessSecret
+	secretKey := []byte(l.svcCtx.Config.JwtAuth.AccessSecret)
 	claims := make(jwt.MapClaims)
 	_, err := jwt.ParseWithClaims(in.Token, claims, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
@@ -41,9 +41,13 @@ func (l *VarifyTokenLogic) VarifyToken(in *usercenter.VarifyTokenReq) (*usercent
 		return nil, err
 	}
 
-	userId := claims[ctxdata.CtxKeyJwtUserId].(int64)
-	tokenType := claims[ctxdata.CtxKeyJwtTokenType].(int64)
+	userId := int64(claims[ctxdata.CtxKeyJwtUserId].(float64))
+	tokenType := int64(claims[ctxdata.CtxKeyJwtTokenType].(float64))
 	if tokenType == model.RegisterTokenType || tokenType == model.ResetTokenType {
+		deadline := time.Now().Add(30 * time.Second)
+		ctx, cancel := context.WithDeadline(context.Background(), deadline)
+		defer cancel()
+		l.ctx = ctx
 		tokenInfo, _ := l.svcCtx.TokenModel.FindOneByUserIdType(l.ctx, userId, tokenType)
 		if tokenInfo.Status == model.ActiveTokenStatus {
 			tokenInfo.Status = model.UsedTokenStatus
