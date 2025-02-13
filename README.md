@@ -3,10 +3,10 @@
 
 ## Dependency
 You need to install software below:
-- mysql
-- redis
-- etcd
-- golang
+- mysql mysql  Ver 8.4.4
+- redis Redis server v=7.2.7
+- etcd etcd Version: 3.5.17
+- golang go version go1.23.5
 
 And you need to start the service below using default port:
 - mysql
@@ -22,6 +22,7 @@ mysql -u ${user} -p${password} < usercenter.sql
 ```
 run api
 ```
+ go mod tidy
  cd app/usercenter/api 
  go run usercenter.go
 ```
