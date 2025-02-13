@@ -1,5 +1,7 @@
 package result
 
+import "CookingMaster_Backend/pkg/xerr"
+
 type ResponseBean struct {
 	Code uint32      `json:"code"`
 	Msg  string      `json:"msg"`
@@ -10,20 +12,16 @@ type NullJson struct{}
 
 func Success(data interface{}) *ResponseBean {
 	return &ResponseBean{
-		Code: 200,
-		Msg:  "success",
+		Code: xerr.OK,
+		Msg:  xerr.MapErrMsg(xerr.OK),
 		Data: data,
 	}
 }
 
-type ResponseErrorBean struct {
-	Code uint32 `json:"code"`
-	Msg  string `json:"msg"`
-}
-
-func Error(errCode uint32, errMsg string) *ResponseErrorBean {
-	return &ResponseErrorBean{
+func Error(errCode uint32, errMsg string) *ResponseBean {
+	return &ResponseBean{
 		Code: errCode,
 		Msg:  errMsg,
+		Data: NullJson{},
 	}
 }
