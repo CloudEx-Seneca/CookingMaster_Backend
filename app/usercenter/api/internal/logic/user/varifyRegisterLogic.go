@@ -4,8 +4,7 @@ import (
 	"CookingMaster_Backend/app/usercenter/api/internal/svc"
 	"CookingMaster_Backend/app/usercenter/api/internal/types"
 	"CookingMaster_Backend/app/usercenter/model"
-	"CookingMaster_Backend/app/usercenter/rpc/usercenterClient"
-	"CookingMaster_Backend/pkg/ctxdata"
+	"CookingMaster_Backend/pkg/authhelper"
 	"CookingMaster_Backend/pkg/xerr"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -26,24 +25,15 @@ func NewVarifyRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Va
 }
 
 func (l *VarifyRegisterLogic) VarifyRegister(req *types.VarifyRegisterReq) (resp *types.VarifyRegisterResp, err error) {
-	//deadline := time.Now().Add(30 * time.Second)
-	//ctx, cancel := context.WithDeadline(context.Background(), deadline)
-	//defer cancel()
-	//l.ctx = ctx
-	_, err = l.svcCtx.UserCenterRpc.VarifyToken(l.ctx, &usercenterClient.VarifyTokenReq{
-		Token: req.RegisterToken,
-	})
+	tm := authhelper.NewTokenParser(l.svcCtx.Config.JwtAuth.AccessSecret, req.RegisterToken)
+	err = tm.VarifyToken()
 	if err != nil {
 		return nil, xerr.NewCodeError(xerr.TOKEN_INVALID_ERROR)
 	}
 
-	userId := ctxdata.GetUidFromCtx(l.ctx)
-	user, _ := l.svcCtx.UserModel.FindOne(l.ctx, userId)
+	user, _ := l.svcCtx.UserModel.FindOne(l.ctx, tm.GetUserId())
 	user.Status = model.VarifiedUserStatus
 	l.svcCtx.UserModel.Update(l.ctx, user)
 
-	token, _ := l.svcCtx.TokenModel.FindOneByUserIdType(l.ctx, userId, model.RegisterTokenType)
-	token.Status = model.UsedTokenStatus
-	l.svcCtx.TokenModel.Update(l.ctx, token)
 	return &types.VarifyRegisterResp{}, nil
 }

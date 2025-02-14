@@ -4,17 +4,11 @@ import (
 	"CookingMaster_Backend/app/usercenter/api/internal/svc"
 	"CookingMaster_Backend/app/usercenter/api/internal/types"
 	"CookingMaster_Backend/app/usercenter/model"
-	"CookingMaster_Backend/app/usercenter/rpc/usercenterClient"
+	"CookingMaster_Backend/pkg/authhelper"
 	"CookingMaster_Backend/pkg/email"
 	"context"
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/base64"
-	"encoding/binary"
 	"fmt"
-	"github.com/bwmarrin/snowflake"
-	"golang.org/x/crypto/argon2"
-	"net"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -34,106 +28,37 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-	userId, err := generateUserId()
+	userId, err := authhelper.GenerateUserId()
 	if err != nil {
-		return &types.RegisterResp{}, err
+		return nil, err
 	}
-	gtResp, err := l.svcCtx.UserCenterRpc.GenerateToken(l.ctx, &usercenterClient.GenerateTokenReq{
-		UserId:    userId,
-		TokenType: model.RegisterTokenType,
-	})
+
+	now := time.Now().Unix()
+	expire := now + l.svcCtx.Config.JwtAuth.AccessExpire
+	tg := authhelper.NewTokenGenerator(l.svcCtx.Config.JwtAuth.AccessSecret, now, expire, userId, model.RegisterTokenType)
+	err = tg.GenerateJwtToken()
 	if err != nil {
-		logx.Errorf("generate token error: %v", err)
-		return &types.RegisterResp{}, err
+		return nil, err
 	}
+	token := tg.GetToken()
 
 	subject := email.REGISTER_EMAIL_SUBJECT
-	body := fmt.Sprintf(email.REGISTER_EMAIL_BODY_TEMPLATE, gtResp.Token)
+	body := fmt.Sprintf(email.REGISTER_EMAIL_BODY_TEMPLATE, token)
 	go email.SendEmail(req.Email, subject, body)
 
-	passwordHash, err := GeneratePassword(req.Password)
+	pm := authhelper.NewPasswordEncoder(req.Password)
+	err = pm.EncodedHash()
 	if err != nil {
-		return &types.RegisterResp{}, err
+		return nil, err
 	}
 	l.svcCtx.UserModel.Insert(l.ctx, &model.Users{
 		Id:       userId,
 		Email:    req.Email,
-		Password: passwordHash,
+		Password: pm.GetEncodedHash(),
 	})
 
 	return &types.RegisterResp{
-		RegisterToken:  gtResp.Token,
-		RegisterExpire: gtResp.Expire,
+		RegisterToken:  token,
+		RegisterExpire: expire,
 	}, nil
-}
-
-func GeneratePassword(password string) (string, error) {
-	salt := make([]byte, 16)
-	_, err := rand.Read(salt)
-	if err != nil {
-		return "", err
-	}
-
-	time := uint32(3)
-	memory := uint32(64 * 1024)
-	threads := uint8(4)
-	keyLen := uint32(32)
-	hash := argon2.IDKey([]byte(password), salt, time, memory, threads, keyLen)
-	encoded := fmt.Sprintf("%s$%d$%d$%d$%s$%s",
-		"argon2id",
-		time,
-		memory,
-		threads,
-		base64.RawStdEncoding.EncodeToString(salt),
-		base64.RawStdEncoding.EncodeToString(hash))
-
-	return encoded, nil
-}
-
-func generateUserId() (int64, error) {
-	nodeId, err := generateNodeId()
-	if err != nil {
-		logx.Errorf("generateNodeId err: %s", err.Error())
-		return 2025, err
-	}
-
-	node, err := snowflake.NewNode(nodeId)
-	if err != nil {
-		logx.Errorf("snowflake.NewNode err: %v", err)
-		return 2025, err
-	}
-
-	return node.Generate().Int64(), nil
-}
-
-func generateNodeId() (int64, error) {
-	mac, err := getMacAddress()
-	if err != nil {
-		logx.Errorf("getMacAddress err: %s", err.Error())
-		return 1023, err
-	}
-
-	hash := sha256.Sum256([]byte(mac))
-	nodeId := int64(binary.BigEndian.Uint64(hash[:8]))
-	if nodeId < 0 {
-		nodeId = -nodeId
-	}
-
-	nodeId = nodeId % 1024
-	return nodeId, nil
-}
-
-func getMacAddress() (string, error) {
-	interfaces, err := net.Interfaces()
-	if err != nil {
-		return "", err
-	}
-
-	for _, iface := range interfaces {
-		if iface.Flags&net.FlagLoopback == 0 && len(iface.HardwareAddr) > 0 {
-			return iface.HardwareAddr.String(), nil
-		}
-	}
-
-	return "", fmt.Errorf("can not find interface by macAddress")
 }
