@@ -5,12 +5,8 @@ import (
 	"CookingMaster_Backend/app/usercenter/rpc/internal/svc"
 	"CookingMaster_Backend/app/usercenter/rpc/usercenter"
 	"CookingMaster_Backend/pkg/ctxdata"
-	"CookingMaster_Backend/pkg/xerr"
 	"context"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/pkg/errors"
-	"time"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -19,9 +15,6 @@ type VarifyTokenLogic struct {
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
-
-var ErrOneTimeTokenOverUsedError = xerr.NewCodeError(xerr.ONETIME_TOKEN_OVERUSED_ERROR)
-var ErrTokenRevokedError = xerr.NewCodeError(xerr.TOKEN_REVOKED_ERROR)
 
 func NewVarifyTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *VarifyTokenLogic {
 	return &VarifyTokenLogic{
@@ -44,23 +37,21 @@ func (l *VarifyTokenLogic) VarifyToken(in *usercenter.VarifyTokenReq) (*usercent
 	userId := int64(claims[ctxdata.CtxKeyJwtUserId].(float64))
 	tokenType := int64(claims[ctxdata.CtxKeyJwtTokenType].(float64))
 	if tokenType == model.RegisterTokenType || tokenType == model.ResetTokenType {
-		deadline := time.Now().Add(30 * time.Second)
-		ctx, cancel := context.WithDeadline(context.Background(), deadline)
-		defer cancel()
-		l.ctx = ctx
+		//deadline := time.Now().Add(3 * time.Second)
+		//ctx, cancel := context.WithDeadline(context.Background(), deadline)
+		//defer cancel()
+		//l.ctx = ctx
 		tokenInfo, _ := l.svcCtx.TokenModel.FindOneByUserIdType(l.ctx, userId, tokenType)
 		if tokenInfo.Status == model.ActiveTokenStatus {
 			tokenInfo.Status = model.UsedTokenStatus
 			l.svcCtx.TokenModel.Update(l.ctx, tokenInfo)
 		} else {
-			return nil, errors.Wrapf(ErrOneTimeTokenOverUsedError, "VerifyToken err userId:%d, tokentype:%d",
-				userId, tokenType)
+			return nil, err
 		}
 	} else if tokenType == model.RefreshTokenType {
 		tokenInfo, _ := l.svcCtx.TokenModel.FindOneByUserIdType(l.ctx, userId, tokenType)
 		if tokenInfo.Status == model.RevokedTokenStatus {
-			return nil, errors.Wrapf(ErrTokenRevokedError, "VerifyToken err userId:%d, tokentype:%d",
-				userId, tokenType)
+			return nil, err
 		}
 	}
 
