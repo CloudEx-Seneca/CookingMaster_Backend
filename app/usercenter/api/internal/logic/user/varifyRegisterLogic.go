@@ -33,7 +33,10 @@ func (l *VarifyRegisterLogic) VarifyRegister(req *types.VarifyRegisterReq) (resp
 
 	user, _ := l.svcCtx.UserModel.FindOne(l.ctx, tm.GetUserId())
 	user.Status = model.VarifiedUserStatus
-	l.svcCtx.UserModel.Update(l.ctx, user)
+	err = l.svcCtx.UserModel.Update(l.ctx, user)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.VarifyRegisterResp{}, nil
 }

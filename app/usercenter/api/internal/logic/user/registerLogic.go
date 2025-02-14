@@ -51,11 +51,14 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	if err != nil {
 		return nil, err
 	}
-	l.svcCtx.UserModel.Insert(l.ctx, &model.Users{
+	_, err = l.svcCtx.UserModel.Insert(l.ctx, &model.Users{
 		Id:       userId,
 		Email:    req.Email,
 		Password: pm.GetEncodedHash(),
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.RegisterResp{
 		RegisterToken:  token,
