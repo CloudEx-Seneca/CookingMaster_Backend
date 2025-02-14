@@ -31,7 +31,10 @@ func (l *VarifyRegisterLogic) VarifyRegister(req *types.VarifyRegisterReq) (resp
 		return nil, xerr.NewCodeError(xerr.TOKEN_INVALID_ERROR)
 	}
 
-	user, _ := l.svcCtx.UserModel.FindOne(l.ctx, tm.GetUserId())
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, tm.GetUserId())
+	if err != nil {
+		return nil, err
+	}
 	user.Status = model.VarifiedUserStatus
 	err = l.svcCtx.UserModel.Update(l.ctx, user)
 	if err != nil {

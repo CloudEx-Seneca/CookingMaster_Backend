@@ -12,6 +12,7 @@ type Config struct {
 		AccessExpire int64
 	}
 
-	DataSource string
-	Cache      cache.CacheConf
+	DataSource      string
+	Cache           cache.CacheConf
+	FrontendDomains string
 }

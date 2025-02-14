@@ -6,6 +6,7 @@ import (
 	"CookingMaster_Backend/app/usercenter/model"
 	"CookingMaster_Backend/pkg/authhelper"
 	"CookingMaster_Backend/pkg/email"
+	"CookingMaster_Backend/pkg/xerr"
 	"context"
 	"fmt"
 	"time"
@@ -28,6 +29,11 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
+	user, err := l.svcCtx.UserModel.FindOneByEmail(l.ctx, req.Email)
+	if user != nil {
+		return nil, xerr.NewCodeError(xerr.EMAIL_REGISTERD_BEFORE_ERROR)
+	}
+
 	userId, err := authhelper.GenerateUserId()
 	if err != nil {
 		return nil, err
