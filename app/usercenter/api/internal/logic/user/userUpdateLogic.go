@@ -31,9 +31,9 @@ func (l *UserUpdateLogic) UserUpdate(req *types.UserUpdateReq) (resp *types.User
 		return nil, err
 	}
 
-	user.Nickname = sql.NullString{String: req.UserDetail.Nickname, Valid: req.UserDetail.Nickname != ""}
-	user.Sex = req.UserDetail.Sex
-	user.Info = sql.NullString{String: req.UserDetail.Info, Valid: req.UserDetail.Info != ""}
+	user.Nickname = sql.NullString{String: req.Nickname, Valid: req.Nickname != ""}
+	user.Sex = req.Sex
+	user.Info = sql.NullString{String: req.Info, Valid: req.Info != ""}
 	err = l.svcCtx.UserModel.Update(l.ctx, user)
 	if err != nil {
 		return nil, err

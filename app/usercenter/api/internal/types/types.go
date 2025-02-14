@@ -84,7 +84,9 @@ type UserDetailResp struct {
 }
 
 type UserUpdateReq struct {
-	UserDetail User `json:"user"`
+	Nickname  string `json:"nickname"`
+	Sex       int64  `json:"sex"`
+	Info      string `json:"info"`
 }
 
 type UserUpdateResp struct {
