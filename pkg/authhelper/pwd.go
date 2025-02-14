@@ -5,6 +5,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"golang.org/x/crypto/argon2"
+	"strconv"
+	"strings"
 )
 
 type PasswordManager struct {
@@ -53,17 +55,16 @@ func NewPasswordDecoder(password string, encodedHash string) *PasswordManager {
 }
 
 func (pm *PasswordManager) VerifyPassword() (bool, error) {
-	var algo string
 	var time, memory uint32
 	var threads uint8
 	var saltB64, hashB64 string
 
-	_, err := fmt.Scanf(pm.encodedHash, "%s$%d$%d$%d$%s$%s", &algo, &time, &memory, &threads, &saltB64, &hashB64)
+	_, time, memory, threads, saltB64, hashB64, err := parseEncodedHash(pm.encodedHash)
 	if err != nil {
 		return false, err
 	}
 
-	salt, err := base64.StdEncoding.DecodeString(saltB64)
+	salt, err := base64.RawStdEncoding.DecodeString(saltB64)
 	if err != nil {
 		return false, err
 	}
@@ -76,4 +77,26 @@ func (pm *PasswordManager) VerifyPassword() (bool, error) {
 	newHash := argon2.IDKey([]byte(pm.password), salt, time, memory, threads, uint32(len(expectedHash)))
 
 	return string(newHash) == string(expectedHash), nil
+}
+
+func parseEncodedHash(encodedHash string) (string, uint32, uint32, uint8, string, string, error) {
+	parts := strings.Split(encodedHash, "$")
+	if len(parts) != 6 {
+		return "", 0, 0, 0, "", "", fmt.Errorf("invalid encoded hash format")
+	}
+
+	time, err := strconv.ParseUint(parts[1], 10, 32)
+	if err != nil {
+		return "", 0, 0, 0, "", "", fmt.Errorf("invalid time: %v", err)
+	}
+	memory, err := strconv.ParseUint(parts[2], 10, 32)
+	if err != nil {
+		return "", 0, 0, 0, "", "", fmt.Errorf("invalid memory: %v", err)
+	}
+	threads, err := strconv.ParseUint(parts[3], 10, 8)
+	if err != nil {
+		return "", 0, 0, 0, "", "", fmt.Errorf("invalid threads: %v", err)
+	}
+
+	return parts[0], uint32(time), uint32(memory), uint8(threads), parts[4], parts[5], nil
 }
