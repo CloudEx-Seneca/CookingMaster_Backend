@@ -18,7 +18,7 @@ var RESET_EMAIL_BODY_TEMPLATE = `Dear Friend,
 
 We received a request to reset your password. If you made this request, please click the link below to reset your password:  
 
-%s  
+http://127.0.0.1:8888/usercenter/v1/user/passwordreset?token=%s
 
 If you did not request a password reset, please ignore this email.  
 

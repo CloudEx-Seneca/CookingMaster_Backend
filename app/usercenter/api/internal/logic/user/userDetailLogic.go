@@ -1,6 +1,7 @@
 package user
 
 import (
+	"CookingMaster_Backend/pkg/ctxdata"
 	"context"
 
 	"CookingMaster_Backend/app/usercenter/api/internal/svc"
@@ -24,7 +25,23 @@ func NewUserDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserDe
 }
 
 func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.UserDetailResp, err error) {
-	// todo: add your logic here and delete this line
+	userId := ctxdata.GetUidFromCtx(l.ctx)
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
+	if err != nil {
+		return nil, err
+	}
 
-	return &types.UserDetailResp{}, nil
+	var userInfo = types.User{
+		UserId:    user.Id,
+		Email:     user.Email,
+		Status:    user.Status,
+		Nickname:  user.Nickname.String,
+		Sex:       user.Sex,
+		AvatarUrl: user.AvatarUrl.String,
+		Info:      user.Info.String,
+	}
+
+	return &types.UserDetailResp{
+		UserDetail: userInfo,
+	}, nil
 }

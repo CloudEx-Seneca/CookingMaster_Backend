@@ -1,10 +1,11 @@
 package user
 
 import (
-	"context"
-
 	"CookingMaster_Backend/app/usercenter/api/internal/svc"
 	"CookingMaster_Backend/app/usercenter/api/internal/types"
+	"CookingMaster_Backend/pkg/ctxdata"
+	"context"
+	"database/sql"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +25,19 @@ func NewUserUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserUp
 }
 
 func (l *UserUpdateLogic) UserUpdate(req *types.UserUpdateReq) (resp *types.UserUpdateResp, err error) {
-	// todo: add your logic here and delete this line
+	userId := ctxdata.GetUidFromCtx(l.ctx)
+	user, err := l.svcCtx.UserModel.FindOne(l.ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	user.Nickname = sql.NullString{String: req.UserDetail.Nickname, Valid: req.UserDetail.Nickname != ""}
+	user.Sex = req.UserDetail.Sex
+	user.Info = sql.NullString{String: req.UserDetail.Info, Valid: req.UserDetail.Info != ""}
+	err = l.svcCtx.UserModel.Update(l.ctx, user)
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.UserUpdateResp{}, nil
 }
