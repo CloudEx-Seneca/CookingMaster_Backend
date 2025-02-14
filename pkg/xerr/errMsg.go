@@ -8,6 +8,9 @@ func init() {
 	message[SERVER_COMMON_ERROR] = "server common error"
 	message[REQUEST_PARAM_ERROR] = "request parameter error"
 	message[TOKEN_INVALID_ERROR] = "token invalid"
+	message[EMAIL_UNREGISTERED_ERROR] = "email unregistered"
+	message[USER_NOT_VERIFIED_ERROR] = "user not verified"
+	message[USER_PASSWORD_ERROR] = "password error"
 }
 
 func MapErrMsg(code uint32) string {

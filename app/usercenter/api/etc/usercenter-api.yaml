@@ -10,8 +10,3 @@ DataSource: root:haojiefu@tcp(localhost:3306)/usercenter?charset=utf8mb4&parseTi
 Cache:
   - Host: localhost:6379
 
-UserCenterRpcConf:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: usercenter.rpc
