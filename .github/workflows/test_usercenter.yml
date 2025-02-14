@@ -1,0 +1,30 @@
+name: Test Docker Image
+
+on:
+  push:
+    paths: ["app/usercenter/**"]
+    branches: [ "dev" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: docker build --tag usercenter -f Dockerfile_usercenter
+
+    - name: Run app
+      run: docker run -d -p 8888:8888 usercenter 
+
+    - name: Test app
+      run: |
+        docker ps
+        curl -X POST http://localhost:8888/usercenter/v1/user/register -H "Content-Type: application/json" -d \
+        '{
+        	"username": "testuser",
+        	"password": "password",
+        	"email": "mail@example.com"
+        }'

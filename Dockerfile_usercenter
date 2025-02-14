@@ -1,0 +1,45 @@
+# Dockerfile
+FROM ubuntu:22.04
+
+# Set environment variables to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y \
+    redis \
+    wget \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Go
+RUN wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz && \
+    tar -C /usr/local -xzf go1.24.0.linux-amd64.tar.gz && \
+    rm go1.24.0.linux-amd64.tar.gz
+
+# Add Go to PATH
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the Go module files
+COPY go.mod go.sum ./
+
+# Download Go dependencies
+RUN go mod tidy
+
+# Copy the source code
+COPY . .
+
+# Build the application
+RUN cd app/usercenter/api && go build -o usercenter .
+
+# Expose the application port
+EXPOSE 8888
+
+# Start services and run the application
+CMD redis-server & \
+    cd app/usercenter/api && \
+    ./usercenter
