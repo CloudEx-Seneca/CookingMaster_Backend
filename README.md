@@ -15,14 +15,24 @@ And you need to start the service below using default port:
 
 ## Run Service
 ## UserCenter Service
-init db
+### init db
 ```
 cd app/usercenter/model/sql 
 mysql -u ${user} -p${password} < usercenter.sql
 ```
-run api
+### run api
 ```
  go mod tidy
  cd app/usercenter/api 
  go run usercenter.go
 ```
+### swagger view
+1. download swagger binary from https://github.com/go-swagger/go-swagger/releases based on your platform.
+2. execute commands below.
+```
+cd app/usercenter/api/desc
+## swagger_darwin_amd64 for mac os and amd64 arch
+${path}/swagger_darwin_amd64 serve -F=swagger usercenter.json --port 9088 --host 0.0.0.0 --no-open
+
+```
+3. open http://localhost:9088/docs from your browser.
