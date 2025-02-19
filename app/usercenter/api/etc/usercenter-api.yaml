@@ -7,6 +7,8 @@ JwtAuth:
   AccessExpire: 3600
 
 DataSource: root:haojiefu@tcp(localhost:3306)/usercenter?charset=utf8mb4&parseTime=true&loc=Local
+#Connect External db
+#DataSource: root:pw@tcp(backend_db:3306)/usercenter?charset=utf8mb4&parseTime=true&loc=Local
 Cache:
   - Host: localhost:6379
 
