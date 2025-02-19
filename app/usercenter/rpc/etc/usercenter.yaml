@@ -10,6 +10,7 @@ JwtAuth:
   ShortExpire: 3600
   LongExpire: 2592000
 
-DataSource: root:haojiefu@tcp(localhost:3306)/usercenter
+DataSource: root:haojiefu@tcp(localhost:3306)/usercenter?charset=utf8mb4&parseTime=true&loc=Local
 Cache:
   - Host: localhost:6379
+

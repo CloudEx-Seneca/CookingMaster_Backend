@@ -3,10 +3,8 @@ package logic
 import (
 	"CookingMaster_Backend/app/usercenter/model"
 	"CookingMaster_Backend/pkg/ctxdata"
-	"CookingMaster_Backend/pkg/xerr"
 	"context"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/pkg/errors"
 	"time"
 
 	"CookingMaster_Backend/app/usercenter/rpc/internal/svc"
@@ -20,8 +18,6 @@ type GenerateTokenLogic struct {
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
-
-var ErrGenerateTokenError = xerr.NewCodeError(xerr.TOKEN_GENERATE_ERROR)
 
 func NewGenerateTokenLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GenerateTokenLogic {
 	return &GenerateTokenLogic{
@@ -45,12 +41,11 @@ func (l *GenerateTokenLogic) GenerateToken(in *usercenter.GenerateTokenReq) (*us
 		token, err = l.generateJwtToken(secretKey, now, expire, in.UserId, in.TokenType)
 	}
 	if err != nil {
-		return nil, errors.Wrapf(ErrGenerateTokenError, "generateJwtToken err userId:%d, tokentype:%d, err:%v",
-			in.UserId, in.TokenType, err)
+		return nil, err
 	}
 
 	if in.TokenType == model.RegisterTokenType || in.TokenType == model.ResetTokenType || in.TokenType == model.RefreshTokenType {
-		l.svcCtx.TokenModel.Update(l.ctx, &model.UserTokens{
+		l.svcCtx.TokenModel.Insert(l.ctx, &model.UserTokens{
 			UserId: in.UserId,
 			Type:   in.TokenType,
 			Token:  token,

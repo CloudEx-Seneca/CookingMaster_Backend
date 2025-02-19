@@ -1,7 +1,13 @@
 package user
 
 import (
+	"CookingMaster_Backend/app/usercenter/model"
+	"CookingMaster_Backend/pkg/authhelper"
+	"CookingMaster_Backend/pkg/email"
+	"CookingMaster_Backend/pkg/xerr"
 	"context"
+	"fmt"
+	"time"
 
 	"CookingMaster_Backend/app/usercenter/api/internal/svc"
 	"CookingMaster_Backend/app/usercenter/api/internal/types"
@@ -24,7 +30,24 @@ func NewPasswordResetLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Pas
 }
 
 func (l *PasswordResetLogic) PasswordReset(req *types.PasswordResetReq) (resp *types.PasswordResetResp, err error) {
-	// todo: add your logic here and delete this line
+	user, err := l.svcCtx.UserModel.FindOneByEmail(l.ctx, req.Email)
+	if err != nil {
+		return nil, xerr.NewCodeError(xerr.EMAIL_UNREGISTERED_ERROR)
+	}
 
-	return &types.PasswordResetResp{}, nil
+	now := time.Now().Unix()
+	expire := now + l.svcCtx.Config.JwtAuth.AccessExpire
+	tm := authhelper.NewTokenGenerator(l.svcCtx.Config.JwtAuth.AccessSecret, now, expire, user.Id, model.ResetTokenType)
+	err = tm.GenerateJwtToken()
+	if err != nil {
+		return nil, err
+	}
+
+	body := fmt.Sprintf(email.RESET_EMAIL_BODY_TEMPLATE, tm.GetToken())
+	go email.SendEmail(req.Email, email.RESET_EMAIL_SUBJECT, body)
+
+	return &types.PasswordResetResp{
+		ResetToken:  tm.GetToken(),
+		ResetExipre: expire,
+	}, nil
 }

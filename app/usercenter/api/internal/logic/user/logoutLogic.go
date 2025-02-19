@@ -1,6 +1,8 @@
 package user
 
 import (
+	"CookingMaster_Backend/pkg/authhelper"
+	"CookingMaster_Backend/pkg/xerr"
 	"context"
 
 	"CookingMaster_Backend/app/usercenter/api/internal/svc"
@@ -24,7 +26,12 @@ func NewLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LogoutLogi
 }
 
 func (l *LogoutLogic) Logout(req *types.LogoutReq) (resp *types.LogoutResp, err error) {
-	// todo: add your logic here and delete this line
+	tm := authhelper.NewTokenParser(l.svcCtx.Config.JwtAuth.AccessSecret, req.RefreshToken)
+	err = tm.VarifyToken()
+	if err != nil {
+		return nil, xerr.NewCodeError(xerr.TOKEN_INVALID_ERROR)
+	}
 
+	// TODO: invalid fresh token, for now leave it to frontend because jwt is stateless
 	return &types.LogoutResp{}, nil
 }

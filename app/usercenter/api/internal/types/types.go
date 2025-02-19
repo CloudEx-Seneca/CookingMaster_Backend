@@ -48,7 +48,7 @@ type RegisterReq struct {
 
 type RegisterResp struct {
 	RegisterToken  string `json:"token"`
-	RegisterExpire string `json:"expire"`
+	RegisterExpire int64  `json:"expire"`
 }
 
 type ResetPasswordReq struct {
@@ -84,7 +84,9 @@ type UserDetailResp struct {
 }
 
 type UserUpdateReq struct {
-	UserDetail User `json:"user"`
+	Nickname  string `json:"nickname"`
+	Sex       int64  `json:"sex"`
+	Info      string `json:"info"`
 }
 
 type UserUpdateResp struct {

@@ -31,3 +31,11 @@ func getTokenInfoFromCtx(ctx context.Context, key string) int64 {
 
 	return tokenInfo
 }
+
+func WriteUserIdToCtx(ctx context.Context, userId int64) context.Context {
+	return context.WithValue(ctx, CtxKeyJwtUserId, userId)
+}
+
+func WriteTokenTypeToCtx(ctx context.Context, tokenType int64) context.Context {
+	return context.WithValue(ctx, CtxKeyJwtTokenType, tokenType)
+}

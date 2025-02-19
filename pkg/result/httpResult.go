@@ -16,7 +16,7 @@ func HttpResult(r *http.Request, w http.ResponseWriter, resp interface{}, err er
 		httpx.WriteJson(w, http.StatusOK, r)
 	} else {
 		errCode := xerr.SERVER_COMMON_ERROR
-		errMsg := "Server Error"
+		errMsg := xerr.MapErrMsg(xerr.SERVER_COMMON_ERROR)
 		causeErr := errors.Cause(err)
 		if e, ok := causeErr.(*xerr.CodeError); ok {
 			errCode = e.GetErrCode()
