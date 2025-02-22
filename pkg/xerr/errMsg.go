@@ -11,7 +11,7 @@ func init() {
 	message[EMAIL_UNREGISTERED_ERROR] = "User unregistered"
 	message[EMAIL_REGISTERD_BEFORE_ERROR] = "This email has already been registered"
 	message[USER_NOT_VERIFIED_ERROR] = "User not verified"
-	message[USER_PASSWORD_ERROR] = "Incorrect password"
+	message[USER_PASSWORD_ERROR] = "Email or password incorrect"
 }
 
 func MapErrMsg(code uint32) string {
