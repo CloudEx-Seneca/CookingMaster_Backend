@@ -37,7 +37,7 @@ func (l *UserDetailLogic) UserDetail(req *types.UserDetailReq) (resp *types.User
 		Status:    user.Status,
 		Nickname:  user.Nickname.String,
 		Sex:       user.Sex,
-		AvatarUrl: user.AvatarUrl.String,
+		AvatarURL: user.AvatarUrl.String,
 		Info:      user.Info.String,
 	}
 
