@@ -4,10 +4,10 @@ use `usercenter`;
 drop table if exists `users`;
 create table `users` (
     id          bigint not null comment 'snowflake ID',
-    email       varchar(64) not null comment 'user email',
+    email       varchar(65) not null comment 'user email',
     password    varchar(255) not null comment 'argon2 hash',
     status      tinyint default 0 comment '0:unvarified, 1:varified',
-    nickname    varchar(64) comment 'user nickname',
+    nickname    varchar(65) comment 'user nickname',
     sex         tinyint default 0 comment '0:unknown, 1:male, 2:female',
     avatar_url  varchar(255) comment 'avatar url',
     info        varchar(255) comment 'user info',
