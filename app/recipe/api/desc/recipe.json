@@ -1,0 +1,245 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Recipe API",
+    "description": "Api description for recipe",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/recipe/v1/recipe/delete": {
+      "post": {
+        "operationId": "RecipeDelete",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RecipeDeleteResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecipeDeleteReq"
+            }
+          }
+        ],
+        "tags": [
+          "recipe"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/recipe/v1/recipe/detail": {
+      "post": {
+        "operationId": "RecipeDetail",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RecipeDetailResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecipeDetailReq"
+            }
+          }
+        ],
+        "tags": [
+          "recipe"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/recipe/v1/recipe/insertorupdate": {
+      "post": {
+        "operationId": "RecipeInsertOrUpdate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RecipeInsertOrUpdateResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecipeInsertoOrUpdateReq"
+            }
+          }
+        ],
+        "tags": [
+          "recipe"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    },
+    "/recipe/v1/recipe/list": {
+      "post": {
+        "operationId": "RecipeList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/RecipeListResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RecipeListReq"
+            }
+          }
+        ],
+        "tags": [
+          "recipe"
+        ],
+        "security": [
+          {
+            "apiKey": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "RecipeDeleteReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "RecipeDeleteReq",
+      "required": [
+        "name"
+      ]
+    },
+    "RecipeDeleteResp": {
+      "type": "object",
+      "title": "RecipeDeleteResp"
+    },
+    "RecipeDetailReq": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "RecipeDetailReq",
+      "required": [
+        "name"
+      ]
+    },
+    "RecipeDetailResp": {
+      "type": "object",
+      "properties": {
+        "recipe": {
+          "$ref": "#/definitions/RecipeInfo"
+        }
+      },
+      "title": "RecipeDetailResp",
+      "required": [
+        "recipe"
+      ]
+    },
+    "RecipeInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "title": "RecipeInfo",
+      "required": [
+        "name",
+        "description"
+      ]
+    },
+    "RecipeInsertOrUpdateResp": {
+      "type": "object",
+      "title": "RecipeInsertOrUpdateResp"
+    },
+    "RecipeInsertoOrUpdateReq": {
+      "type": "object",
+      "properties": {
+        "recipe": {
+          "$ref": "#/definitions/RecipeInfo"
+        }
+      },
+      "title": "RecipeInsertoOrUpdateReq",
+      "required": [
+        "recipe"
+      ]
+    },
+    "RecipeListReq": {
+      "type": "object",
+      "title": "RecipeListReq"
+    },
+    "RecipeListResp": {
+      "type": "object",
+      "properties": {
+        "recipes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RecipeInfo"
+          }
+        }
+      },
+      "title": "RecipeListResp",
+      "required": [
+        "recipes"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}
