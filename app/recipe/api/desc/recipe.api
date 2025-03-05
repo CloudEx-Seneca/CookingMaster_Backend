@@ -10,8 +10,8 @@ info (
 type RecipeInfo {
 	name        string   `json:"name"`
 	description string   `json:"description"`
-	ingredients []string `json:"ingredients"`
-	quantities  []string `json:"quantities"`
+//	ingredients []string `json:"ingredients"`
+//	quantities  []string `json:"quantities"`
 }
 
 type (
@@ -30,10 +30,10 @@ type (
 
 type (
 	RecipeDetailReq {
-		name string `json:name`
+		name string `json:"name"`
 	}
 	RecipeDetailResp {
-		Recipe RecipeInfo `json:recipe`
+		Recipe RecipeInfo `json:"recipe"`
 	}
 )
 

@@ -1,6 +1,6 @@
 Name: recipe-api
 Host: 0.0.0.0
-Port: 8888
+Port: 8889
 
 JwtAuth:
   AccessSecret: ae0536f9-6450-4606-8e13-5a19ed505da0

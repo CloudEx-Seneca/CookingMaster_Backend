@@ -11,18 +11,18 @@ type RecipeDeleteResp struct {
 }
 
 type RecipeDetailReq struct {
-	Name string `json:name`
+	Name string `json:"name"`
 }
 
 type RecipeDetailResp struct {
-	Recipe RecipeInfo `json:recipe`
+	Recipe RecipeInfo `json:"recipe"`
 }
 
 type RecipeInfo struct {
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
-	Ingredients []string `json:"ingredients"`
-	Quantities  []string `json:"quantities"`
+	//Ingredients []string `json:"ingredients"`
+	//Quantities  []string `json:"quantities"`
 }
 
 type RecipeInsertOrUpdateResp struct {

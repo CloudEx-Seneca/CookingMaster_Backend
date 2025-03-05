@@ -1,6 +1,7 @@
 package recipe
 
 import (
+	"CookingMaster_Backend/pkg/result"
 	"net/http"
 
 	"CookingMaster_Backend/app/recipe/api/internal/logic/recipe"
@@ -13,16 +14,12 @@ func RecipeDetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.RecipeDetailReq
 		if err := httpx.Parse(r, &req); err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
+			result.ParamErrorResult(r, w, err)
 			return
 		}
 
 		l := recipe.NewRecipeDetailLogic(r.Context(), svcCtx)
 		resp, err := l.RecipeDetail(&req)
-		if err != nil {
-			httpx.ErrorCtx(r.Context(), w, err)
-		} else {
-			httpx.OkJsonCtx(r.Context(), w, resp)
-		}
+		result.HttpResult(r, w, resp, err)
 	}
 }

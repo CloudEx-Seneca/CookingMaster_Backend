@@ -24,7 +24,15 @@ func NewRecipeDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Reci
 }
 
 func (l *RecipeDetailLogic) RecipeDetail(req *types.RecipeDetailReq) (resp *types.RecipeDetailResp, err error) {
-	// todo: add your logic here and delete this line
+	recipe, err := l.svcCtx.RecipeModel.FindOneByName(l.ctx, req.Name)
+	if err != nil {
+		return nil, err
+	}
 
-	return
+	return &types.RecipeDetailResp{
+		Recipe: types.RecipeInfo{
+			Name:        recipe.Name,
+			Description: recipe.Description.String,
+		},
+	}, nil
 }
