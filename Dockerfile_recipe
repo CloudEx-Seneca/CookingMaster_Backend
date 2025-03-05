@@ -41,5 +41,5 @@ EXPOSE 8889
 
 # Start services and run the application
 CMD redis-server & \
-    cd app/usercenter/api && \
-    ./usercenter
+    cd app/recipe/api && \
+    ./recipe
