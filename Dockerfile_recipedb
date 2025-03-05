@@ -1,0 +1,5 @@
+FROM mysql:8.0
+
+COPY ./app/recipe/model/sql/recipe.sql /tmp
+
+CMD [ "mysqld", "--init-file=/tmp/recipe.sql" ]
