@@ -5,6 +5,7 @@ go 1.23.5
 require (
 	github.com/bwmarrin/snowflake v0.3.0
 	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/gorilla/mux v1.8.1
 	github.com/pkg/errors v0.9.1
 	github.com/zeromicro/go-zero v1.8.0
 	golang.org/x/crypto v0.32.0

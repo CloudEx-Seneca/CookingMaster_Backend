@@ -36,3 +36,26 @@ ${path}/swagger_darwin_amd64 serve -F=swagger usercenter.json --port 9088 --host
 
 ```
 3. open http://localhost:9088/docs from your browser.
+
+## Recipe Service
+### init db
+```
+cd app/recipe/model/sql 
+mysql -u ${user} -p${password} < recipe.sql
+```
+### run api
+```
+ go mod tidy
+ cd app/recipe/api 
+ go run recipe.go
+```
+### swagger view
+1. download swagger binary from https://github.com/go-swagger/go-swagger/releases based on your platform.
+2. execute commands below.
+```
+cd app/usercenter/api/desc
+## swagger_darwin_amd64 for mac os and amd64 arch
+${path}/swagger_darwin_amd64 serve -F=swagger recipe.json --port 9088 --host 0.0.0.0 --no-open
+
+```
+3. open http://localhost:9088/docs from your browser.
