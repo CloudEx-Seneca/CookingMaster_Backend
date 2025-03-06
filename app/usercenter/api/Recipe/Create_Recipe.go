@@ -70,8 +70,8 @@ func main() {
 
 	// Define API routes
 	router.HandleFunc("/recipes", createRecipe).Methods("POST")
-	router.HandleFunc("/recipes", getRecipes).Methods("GET")
-	router.HandleFunc("/recipes/{id}", getRecipe).Methods("GET")
+	#router.HandleFunc("/recipes", getRecipes).Methods("GET")
+	#router.HandleFunc("/recipes/{id}", getRecipe).Methods("GET")
 
 	// Start the server
 	fmt.Println("Server running on port 8080...")
