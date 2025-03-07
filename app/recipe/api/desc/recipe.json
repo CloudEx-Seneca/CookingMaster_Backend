@@ -21,7 +21,7 @@
         "operationId": "RecipeDelete",
         "responses": {
           "200": {
-            "description": "A successful response.",
+            "description": "Recipe has been deleted",
             "schema": {
               "$ref": "#/definitions/RecipeDeleteResp"
             }
