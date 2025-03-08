@@ -32,11 +32,17 @@ func HttpResult(r *http.Request, w http.ResponseWriter, resp interface{}, err er
 		}
 
 		logx.WithContext(r.Context()).Errorf("API ERR: %+v", err)
-		httpx.WriteJson(w, http.StatusBadRequest, Error(errCode, errMsg))
+		fullErrMsg := fmt.Sprintf("%s, %s", errMsg, err.Error())
+		httpx.WriteJson(w, http.StatusBadRequest, Error(errCode, fullErrMsg))
 	}
 }
 
 func ParamErrorResult(r *http.Request, w http.ResponseWriter, err error) {
 	errMsg := fmt.Sprintf("%s, %s", xerr.MapErrMsg(xerr.REQUEST_PARAM_ERROR), err.Error())
 	httpx.WriteJson(w, http.StatusBadRequest, Error(xerr.REQUEST_PARAM_ERROR, errMsg))
+}
+
+func DBErrorResult(r *http.Request, w http.ResponseWriter, err error) {
+	errMsg := fmt.Sprintf("%s, %s", xerr.MapErrMsg(xerr.DB_ERROR), err.Error())
+	httpx.WriteJson(w, http.StatusBadRequest, Error(xerr.DB_ERROR, errMsg))
 }
