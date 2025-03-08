@@ -43,7 +43,7 @@ func (l *PasswordResetLogic) PasswordReset(req *types.PasswordResetReq) (resp *t
 		return nil, err
 	}
 
-	body := fmt.Sprintf(email.RESET_EMAIL_BODY_TEMPLATE, tm.GetToken())
+	body := fmt.Sprintf(email.RESET_EMAIL_BODY_TEMPLATE, l.svcCtx.Config.EmailLinkDomain, tm.GetToken())
 	go email.SendEmail(req.Email, email.RESET_EMAIL_SUBJECT, body)
 
 	return &types.PasswordResetResp{

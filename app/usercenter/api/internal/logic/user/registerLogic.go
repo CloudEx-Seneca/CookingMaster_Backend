@@ -38,20 +38,6 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	if err != nil {
 		return nil, err
 	}
-
-	now := time.Now().Unix()
-	expire := now + l.svcCtx.Config.JwtAuth.AccessExpire
-	tg := authhelper.NewTokenGenerator(l.svcCtx.Config.JwtAuth.AccessSecret, now, expire, userId, model.RegisterTokenType)
-	err = tg.GenerateJwtToken()
-	if err != nil {
-		return nil, err
-	}
-	token := tg.GetToken()
-
-	subject := email.REGISTER_EMAIL_SUBJECT
-	body := fmt.Sprintf(email.REGISTER_EMAIL_BODY_TEMPLATE, token)
-	go email.SendEmail(req.Email, subject, body)
-
 	pm := authhelper.NewPasswordEncoder(req.Password)
 	err = pm.EncodedHash()
 	if err != nil {
@@ -65,6 +51,19 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	if err != nil {
 		return nil, err
 	}
+
+	now := time.Now().Unix()
+	expire := now + l.svcCtx.Config.JwtAuth.AccessExpire
+	tg := authhelper.NewTokenGenerator(l.svcCtx.Config.JwtAuth.AccessSecret, now, expire, userId, model.RegisterTokenType)
+	err = tg.GenerateJwtToken()
+	if err != nil {
+		return nil, err
+	}
+	token := tg.GetToken()
+
+	subject := email.REGISTER_EMAIL_SUBJECT
+	body := fmt.Sprintf(email.REGISTER_EMAIL_BODY_TEMPLATE, l.svcCtx.Config.EmailLinkDomain, token)
+	go email.SendEmail(req.Email, subject, body)
 
 	return &types.RegisterResp{
 		RegisterToken:  token,

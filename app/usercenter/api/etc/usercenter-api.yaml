@@ -13,3 +13,5 @@ Cache:
   - Host: localhost:6379
 
 FrontendDomains: http://localhost:3000
+
+EmailLinkDomain: http://127.0.0.1:8888
