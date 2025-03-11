@@ -13,6 +13,7 @@ type Config struct {
 	}
 
 	DataSource      string
+	DBEnvEnabled    bool
 	Cache           cache.CacheConf
 	FrontendDomains string
 	EmailLinkDomain string
