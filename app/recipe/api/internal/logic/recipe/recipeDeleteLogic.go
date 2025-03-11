@@ -28,3 +28,5 @@ func (l *RecipeDeleteLogic) RecipeDelete(req *types.RecipeDeleteReq) (resp *type
 	// userId := ctxdata.GetUidFromCtx(l.ctx)
 	// recipe, err := l.svcCtx.RecipeModel.FindOneByName(l.ctx, req.Recipe.Name)
 	// if err != nil {
+	return
+}
