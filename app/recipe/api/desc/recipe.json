@@ -83,7 +83,7 @@
         "operationId": "RecipeInsertOrUpdate",
         "responses": {
           "200": {
-            "description": "A successful response.",
+            "description": "Recipe sucessfully updated.",
             "schema": {
               "$ref": "#/definitions/RecipeInsertOrUpdateResp"
             }
