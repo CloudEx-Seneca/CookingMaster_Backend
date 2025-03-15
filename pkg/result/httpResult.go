@@ -3,12 +3,32 @@ package result
 import (
 	"CookingMaster_Backend/pkg/xerr"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"google.golang.org/grpc/status"
 	"net/http"
 )
+
+func GinResult(c *gin.Context, code int, resp interface{}, err error) {
+	if err != nil {
+		r := Success(resp)
+		c.JSON(code, r)
+	} else {
+		errCode := xerr.SERVER_COMMON_ERROR
+		errMsg := xerr.MapErrMsg(xerr.SERVER_COMMON_ERROR)
+		causeErr := errors.Cause(err)
+		if e, ok := causeErr.(*xerr.CodeError); ok {
+			errCode = e.GetErrCode()
+			errMsg = e.GetErrMsg()
+			c.JSON(code, Error(errCode, errMsg))
+		} else {
+			fullErrMsg := fmt.Sprintf("%s, %s", errMsg, err.Error())
+			c.JSON(code, Error(errCode, fullErrMsg))
+		}
+	}
+}
 
 func HttpResult(r *http.Request, w http.ResponseWriter, resp interface{}, err error) {
 	if err == nil {
