@@ -19,7 +19,7 @@ create table `ingredients` (
     id          bigint not null auto_increment,
     recipe_id   bigint not null,
     name        varchar(64) not null,
-    quantity    varchar(64),
+    quantity    decimal(10,2),
     created_at  timestamp default current_timestamp,
     updated_at  timestamp default current_timestamp on update current_timestamp,
 
