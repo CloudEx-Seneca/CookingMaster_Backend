@@ -4,6 +4,7 @@ import (
 	"CookingMaster_Backend/newapp/common"
 	"CookingMaster_Backend/newapp/recipe/internal"
 	"github.com/gin-gonic/gin"
+	"os"
 )
 
 func main() {
@@ -26,6 +27,6 @@ func main() {
 		api.GET("/search", internal.SearchRecipe)
 	}
 
-	// Run the server on port 8080.
-	router.Run(":8080")
+	addr := os.Getenv("SERVER_PORT")
+	router.Run(addr)
 }

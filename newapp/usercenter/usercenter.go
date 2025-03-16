@@ -4,6 +4,7 @@ import (
 	"CookingMaster_Backend/newapp/common"
 	"CookingMaster_Backend/newapp/usercenter/internal"
 	"github.com/gin-gonic/gin"
+	"os"
 )
 
 // ----- Main ----- //
@@ -24,6 +25,6 @@ func main() {
 		api.POST("/profile", common.JWTAuthMiddleware(), internal.UpdateProfile)
 	}
 
-	// Run the server on port 8080.
-	router.Run(":8080")
+	addr := os.Getenv("SERVER_PORT")
+	router.Run(addr)
 }
