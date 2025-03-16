@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/gin-gonic/gin"
+import (
+	"CookingMaster_Backend/newapp/common"
+	"github.com/gin-gonic/gin"
+)
 
 // RecipeDetailInput is the payload for recipe detail query.
 type RecipeDetailInput struct {
@@ -11,14 +14,14 @@ type RecipeDetailInput struct {
 func RecipeDetail(c *gin.Context) {
 	var input RecipeDetailInput
 	if err := c.ShouldBindQuery(&input); err != nil {
-		respondJSON(c, 400, err.Error(), nil)
+		common.RespondJSON(c, 400, err.Error(), nil)
 		return
 	}
 
 	var recipe Recipe
 	if err := db.Where("id = ?", input.RecipeID).Preload("Ingredients").First(&recipe).Error; err != nil {
-		respondJSON(c, 404, "Recipe not found", nil)
+		common.RespondJSON(c, 404, "Recipe not found", nil)
 		return
 	}
-	respondJSON(c, 200, "Recipe detail", recipe)
+	common.RespondJSON(c, 200, "Recipe detail", recipe)
 }

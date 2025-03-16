@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/gin-gonic/gin"
+import (
+	"CookingMaster_Backend/newapp/common"
+	"github.com/gin-gonic/gin"
+)
 
 // --- Handlers ---
 // RecipeCreateInput is the expected payload for creating a recipe.
@@ -16,14 +19,14 @@ func CreateRecipe(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
 	var input RecipeCreateInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		respondJSON(c, 400, err.Error(), nil)
+		common.RespondJSON(c, 400, err.Error(), nil)
 		return
 	}
 
 	// Get or create ingredient records.
 	ingredients, err := findOrCreateIngredients(input.Ingredients)
 	if err != nil {
-		respondJSON(c, 500, "Failed to process ingredients", nil)
+		common.RespondJSON(c, 500, "Failed to process ingredients", nil)
 		return
 	}
 
@@ -35,8 +38,8 @@ func CreateRecipe(c *gin.Context) {
 		Ingredients: ingredients,
 	}
 	if err := db.Create(&recipe).Error; err != nil {
-		respondJSON(c, 500, "Failed to create recipe", nil)
+		common.RespondJSON(c, 500, "Failed to create recipe", nil)
 		return
 	}
-	respondJSON(c, 200, "Recipe created successfully", recipe)
+	common.RespondJSON(c, 200, "Recipe created successfully", recipe)
 }

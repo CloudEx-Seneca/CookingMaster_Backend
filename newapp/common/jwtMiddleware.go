@@ -1,4 +1,4 @@
-package internal
+package common
 
 import (
 	"fmt"
@@ -7,42 +7,46 @@ import (
 	"strings"
 )
 
-// JWTAuthMiddleware validates JWT tokens and sets "user_id" in context.
+// JWT secret – in production, store securely.
+var JWT_SECRET = []byte("mysecretkey")
+
+// JWTAuthMiddleware validates the token and sets the user_id in the context.
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			respondJSON(c, 401, "Authorization header required", nil)
+			RespondJSON(c, 401, "Authorization header required", nil)
 			c.Abort()
 			return
 		}
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
-			respondJSON(c, 401, "Authorization header format must be Bearer {token}", nil)
+			RespondJSON(c, 401, "Authorization header format must be Bearer {token}", nil)
 			c.Abort()
 			return
 		}
 		tokenString := parts[1]
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			// Validate signing method.
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method")
 			}
-			return jwtSecret, nil
+			return JWT_SECRET, nil
 		})
 		if err != nil || !token.Valid {
-			respondJSON(c, 401, "Invalid token", nil)
+			RespondJSON(c, 401, "Invalid token", nil)
 			c.Abort()
 			return
 		}
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			respondJSON(c, 401, "Invalid token claims", nil)
+			RespondJSON(c, 401, "Invalid token claims", nil)
 			c.Abort()
 			return
 		}
 		userID, ok := claims["user_id"].(float64)
 		if !ok {
-			respondJSON(c, 401, "Invalid token user_id", nil)
+			RespondJSON(c, 401, "Invalid token user_id", nil)
 			c.Abort()
 			return
 		}

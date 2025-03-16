@@ -2,13 +2,6 @@ package internal
 
 import "time"
 
-// Response defines the professional JSON response format.
-type Response struct {
-	Code    int         `json:"code"`    // e.g., 200 for success, 400/500 for errors
-	Message string      `json:"message"` // descriptive message
-	Data    interface{} `json:"data"`    // result payload (if any)
-}
-
 // User entity definition.
 type User struct {
 	ID        uint      `gorm:"primaryKey" json:"id"`

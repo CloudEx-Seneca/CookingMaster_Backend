@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"CookingMaster_Backend/newapp/common"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -21,7 +22,7 @@ type RecipeSearchResponse struct {
 func SearchRecipe(c *gin.Context) {
 	var input RecipeSearchInput
 	if err := c.ShouldBindQuery(&input); err != nil {
-		respondJSON(c, 400, err.Error(), nil)
+		common.RespondJSON(c, 400, err.Error(), nil)
 		return
 	}
 	// Split and normalize the input ingredient names.
@@ -36,7 +37,7 @@ func SearchRecipe(c *gin.Context) {
 
 	var recipes []Recipe
 	if err := db.Preload("Ingredients").Find(&recipes).Error; err != nil {
-		respondJSON(c, 500, "Failed to fetch recipes", nil)
+		common.RespondJSON(c, 500, "Failed to fetch recipes", nil)
 		return
 	}
 
@@ -59,5 +60,5 @@ func SearchRecipe(c *gin.Context) {
 			})
 		}
 	}
-	respondJSON(c, 200, "Search completed", result)
+	common.RespondJSON(c, 200, "Search completed", result)
 }

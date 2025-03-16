@@ -1,24 +1,11 @@
 package internal
 
 import (
-	"github.com/gin-gonic/gin"
+	"CookingMaster_Backend/newapp/common"
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 	"time"
 )
-
-// JWT secret key – in production, store this securely
-var jwtSecret = []byte("mysecretkey")
-
-// respondJSON sends a JSON response with the specified code, message, and data.
-func respondJSON(c *gin.Context, code int, message string, data interface{}) {
-	c.JSON(http.StatusOK, Response{
-		Code:    code,
-		Message: message,
-		Data:    data,
-	})
-}
 
 // hashPassword hashes the plaintext password using bcrypt.
 func hashPassword(password string) (string, error) {
@@ -40,5 +27,5 @@ func generateJWT(userID uint, email string) (string, error) {
 		"exp":     time.Now().Add(72 * time.Hour).Unix(), // token expires in 72 hours
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtSecret)
+	return token.SignedString(common.JWT_SECRET)
 }

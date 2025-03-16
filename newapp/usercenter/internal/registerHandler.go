@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/gin-gonic/gin"
+import (
+	"CookingMaster_Backend/newapp/common"
+	"github.com/gin-gonic/gin"
+)
 
 // ----- Handlers ----- //
 
@@ -15,21 +18,21 @@ type RegisterInput struct {
 func Register(c *gin.Context) {
 	var input RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		respondJSON(c, 400, err.Error(), nil)
+		common.RespondJSON(c, 400, err.Error(), nil)
 		return
 	}
 
 	// Check if the email is already registered.
 	var user User
 	if err := db.Where("email = ?", input.Email).First(&user).Error; err == nil {
-		respondJSON(c, 400, "Email already registered", nil)
+		common.RespondJSON(c, 400, "Email already registered", nil)
 		return
 	}
 
 	// Hash password and create user.
 	hashedPassword, err := hashPassword(input.Password)
 	if err != nil {
-		respondJSON(c, 500, "Failed to hash password", nil)
+		common.RespondJSON(c, 500, "Failed to hash password", nil)
 		return
 	}
 	user = User{
@@ -37,8 +40,8 @@ func Register(c *gin.Context) {
 		Password: hashedPassword,
 	}
 	if err := db.Create(&user).Error; err != nil {
-		respondJSON(c, 500, "Failed to create user", nil)
+		common.RespondJSON(c, 500, "Failed to create user", nil)
 		return
 	}
-	respondJSON(c, 200, "Register successful", nil)
+	common.RespondJSON(c, 200, "Register successful", nil)
 }

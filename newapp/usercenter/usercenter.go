@@ -1,6 +1,7 @@
 package main
 
 import (
+	"CookingMaster_Backend/newapp/common"
 	"CookingMaster_Backend/newapp/usercenter/internal"
 	"github.com/gin-gonic/gin"
 )
@@ -19,8 +20,8 @@ func main() {
 		api.POST("/login", internal.Login)
 
 		// Profile endpoints (JWT protected)
-		api.GET("/profile", internal.JWTAuthMiddleware(), internal.GetProfile)
-		api.POST("/profile", internal.JWTAuthMiddleware(), internal.UpdateProfile)
+		api.GET("/profile", common.JWTAuthMiddleware(), internal.GetProfile)
+		api.POST("/profile", common.JWTAuthMiddleware(), internal.UpdateProfile)
 	}
 
 	// Run the server on port 8080.

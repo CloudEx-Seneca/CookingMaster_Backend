@@ -1,6 +1,7 @@
 package main
 
 import (
+	"CookingMaster_Backend/newapp/common"
 	"CookingMaster_Backend/newapp/recipe/internal"
 	"github.com/gin-gonic/gin"
 )
@@ -13,9 +14,9 @@ func main() {
 	api := router.Group("/recipe/v2")
 	{
 		// Endpoints that require authentication.
-		api.POST("/create", internal.JWTAuthMiddleware(), internal.CreateRecipe)
-		api.POST("/update", internal.JWTAuthMiddleware(), internal.UpdateRecipe)
-		api.POST("/delete", internal.JWTAuthMiddleware(), internal.DeleteRecipe)
+		api.POST("/create", common.JWTAuthMiddleware(), internal.CreateRecipe)
+		api.POST("/update", common.JWTAuthMiddleware(), internal.UpdateRecipe)
+		api.POST("/delete", common.JWTAuthMiddleware(), internal.DeleteRecipe)
 
 		// Public endpoints for reading recipes.
 		api.GET("/list", internal.ListRecipes)

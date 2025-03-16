@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/gin-gonic/gin"
+import (
+	"CookingMaster_Backend/newapp/common"
+	"github.com/gin-gonic/gin"
+)
 
 // RecipeUpdateInput is the payload for updating a recipe.
 type RecipeUpdateInput struct {
@@ -16,13 +19,13 @@ func UpdateRecipe(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
 	var input RecipeUpdateInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		respondJSON(c, 400, err.Error(), nil)
+		common.RespondJSON(c, 400, err.Error(), nil)
 		return
 	}
 
 	var recipe Recipe
 	if err := db.Where("id = ? AND user_id = ?", input.RecipeID, userID).Preload("Ingredients").First(&recipe).Error; err != nil {
-		respondJSON(c, 404, "Recipe not found", nil)
+		common.RespondJSON(c, 404, "Recipe not found", nil)
 		return
 	}
 
@@ -33,19 +36,19 @@ func UpdateRecipe(c *gin.Context) {
 	// Process new ingredient list.
 	newIngredients, err := findOrCreateIngredients(input.Ingredients)
 	if err != nil {
-		respondJSON(c, 500, "Failed to process ingredients", nil)
+		common.RespondJSON(c, 500, "Failed to process ingredients", nil)
 		return
 	}
 
 	// Replace associations: delete old join records and set new ones.
 	if err := db.Model(&recipe).Association("Ingredients").Replace(newIngredients); err != nil {
-		respondJSON(c, 500, "Failed to update ingredients", nil)
+		common.RespondJSON(c, 500, "Failed to update ingredients", nil)
 		return
 	}
 
 	if err := db.Save(&recipe).Error; err != nil {
-		respondJSON(c, 500, "Failed to update recipe", nil)
+		common.RespondJSON(c, 500, "Failed to update recipe", nil)
 		return
 	}
-	respondJSON(c, 200, "Recipe updated successfully", recipe)
+	common.RespondJSON(c, 200, "Recipe updated successfully", recipe)
 }

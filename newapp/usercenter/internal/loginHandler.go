@@ -1,6 +1,9 @@
 package internal
 
-import "github.com/gin-gonic/gin"
+import (
+	"CookingMaster_Backend/newapp/common"
+	"github.com/gin-gonic/gin"
+)
 
 // LoginInput defines the expected parameters for user login.
 type LoginInput struct {
@@ -13,25 +16,25 @@ type LoginInput struct {
 func Login(c *gin.Context) {
 	var input LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		respondJSON(c, 400, err.Error(), nil)
+		common.RespondJSON(c, 400, err.Error(), nil)
 		return
 	}
 
 	var user User
 	if err := db.Where("email = ?", input.Email).First(&user).Error; err != nil {
-		respondJSON(c, 400, "Email not registered", nil)
+		common.RespondJSON(c, 400, "Email not registered", nil)
 		return
 	}
 
 	if !checkPasswordHash(input.Password, user.Password) {
-		respondJSON(c, 400, "Password wrong", nil)
+		common.RespondJSON(c, 400, "Password wrong", nil)
 		return
 	}
 
 	token, err := generateJWT(user.ID, user.Email)
 	if err != nil {
-		respondJSON(c, 500, "Failed to generate token", nil)
+		common.RespondJSON(c, 500, "Failed to generate token", nil)
 		return
 	}
-	respondJSON(c, 200, "Login successful", gin.H{"token": token})
+	common.RespondJSON(c, 200, "Login successful", gin.H{"token": token})
 }
