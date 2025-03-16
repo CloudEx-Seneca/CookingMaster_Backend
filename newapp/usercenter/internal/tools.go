@@ -24,7 +24,7 @@ func generateJWT(userID uint, email string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"email":   email,
-		"exp":     time.Now().Add(72 * time.Hour).Unix(), // token expires in 72 hours
+		"exp":     time.Now().Add(720 * time.Hour).Unix(), // token expires in 720 hours
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(common.JWT_SECRET)
