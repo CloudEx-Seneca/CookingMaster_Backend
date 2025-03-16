@@ -10,6 +10,7 @@ import (
 func main() {
 	internal.InitDB()
 	router := gin.Default()
+	router.Use(common.CorsMiddleware())
 
 	// Recipe API endpoints group with prefix /recipe/v2.
 	api := router.Group("/recipe/v2")

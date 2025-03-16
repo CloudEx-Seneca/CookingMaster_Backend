@@ -12,6 +12,7 @@ import (
 func main() {
 	internal.InitDB()
 	router := gin.Default()
+	router.Use(common.CorsMiddleware())
 
 	// Group endpoints under /usercenter/v2.
 	api := router.Group("/usercenter/v2")
