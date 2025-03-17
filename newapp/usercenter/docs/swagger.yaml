@@ -1,0 +1,135 @@
+definitions:
+  common.Response:
+    properties:
+      code:
+        description: e.g., 200 for success, 400/500 for errors
+        type: integer
+      data:
+        description: result payload (if any)
+      message:
+        description: descriptive message
+        type: string
+    type: object
+  internal.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal.ProfileUpdateInput:
+    properties:
+      info:
+        type: string
+      nickname:
+        type: string
+      sex:
+        type: string
+    required:
+    - nickname
+    - sex
+    type: object
+  internal.RegisterInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+info:
+  contact: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/internal.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: User login
+      tags:
+      - usercenter
+  /profile:
+    get:
+      description: Retrieve profile details of the logged in user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - usercenter
+    post:
+      consumes:
+      - application/json
+      description: Update profile details of the logged in user.
+      parameters:
+      - description: User profile update info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/internal.ProfileUpdateInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: Update user profile
+      tags:
+      - usercenter
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user using email and password.
+      parameters:
+      - description: User registration info
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/internal.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Register a new user
+      tags:
+      - usercenter
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

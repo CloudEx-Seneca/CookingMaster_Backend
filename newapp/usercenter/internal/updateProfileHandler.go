@@ -13,6 +13,15 @@ type ProfileUpdateInput struct {
 }
 
 // UpdateProfile updates the authenticated user's profile.
+// @Summary Update user profile
+// @Description Update profile details of the logged in user.
+// @Tags usercenter
+// @Accept json
+// @Produce json
+// @Param user body ProfileUpdateInput true "User profile update info"
+// @Success 200 {object} common.Response
+// @Security BearerAuth
+// @Router /profile [post]
 func UpdateProfile(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
 	var user User

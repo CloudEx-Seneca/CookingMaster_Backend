@@ -13,6 +13,14 @@ type LoginInput struct {
 
 // Login handles user login.
 // It verifies whether the email is registered, checks the password, and returns a JWT on success.
+// @Summary User login
+// @Description Authenticate user and return JWT token.
+// @Tags usercenter
+// @Accept json
+// @Produce json
+// @Param credentials body LoginInput true "Login credentials"
+// @Success 200 {object} common.Response
+// @Router /login [post]
 func Login(c *gin.Context) {
 	var input LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {

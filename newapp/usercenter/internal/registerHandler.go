@@ -15,6 +15,14 @@ type RegisterInput struct {
 
 // Register handles user registration.
 // If the email has been registered before, it returns an error message.
+// @Summary Register a new user
+// @Description Register a new user using email and password.
+// @Tags usercenter
+// @Accept json
+// @Produce json
+// @Param user body RegisterInput true "User registration info"
+// @Success 200 {object} common.Response
+// @Router /register [post]
 func Register(c *gin.Context) {
 	var input RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {

@@ -6,6 +6,13 @@ import (
 )
 
 // GetProfile returns the profile details of the authenticated user.
+// @Summary Get user profile
+// @Description Retrieve profile details of the logged in user.
+// @Tags usercenter
+// @Produce json
+// @Success 200 {object} common.Response
+// @Security BearerAuth
+// @Router /profile [get]
 func GetProfile(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
 	var user User
