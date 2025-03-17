@@ -1,5 +1,5 @@
 FROM mysql:8.0
 
-COPY ./mysql.sql /tmp
+COPY ./newapp/usercenter/usercenter.sql /tmp
 
-CMD [ "mysqld", "--init-file=/tmp/mysql.sql" ]
+CMD [ "mysqld", "--init-file=/tmp/usercenter.sql" ]

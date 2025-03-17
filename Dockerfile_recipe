@@ -7,7 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install necessary packages
 RUN apt-get update && \
     apt-get install -y \
-    redis \
     wget \
     git \
     build-essential \
@@ -22,7 +21,7 @@ RUN wget https://go.dev/dl/go1.24.0.linux-amd64.tar.gz && \
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /newapp
 
 # Copy the Go module files
 COPY go.mod go.sum ./
@@ -34,12 +33,11 @@ RUN go mod tidy
 COPY . .
 
 # Build the application
-RUN cd app/recipe/api && go build -o recipe .
+RUN cd newapp/recipe && go build -o recipe .
 
 # Expose the application port
-EXPOSE 8889
+EXPOSE 8081
 
 # Start services and run the application
-CMD redis-server & \
-    cd app/recipe/api && \
+CMD cd newapp/recipe && \
     ./recipe
