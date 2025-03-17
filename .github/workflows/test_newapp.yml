@@ -17,7 +17,7 @@ jobs:
       run: docker build --tag usercenter -f Dockerfile_usercenter .
 
     - name: Build Recipe Docker image
-      run: docker build --tag usercenter -f Dockerfile_recipe .
+      run: docker build --tag recipe -f Dockerfile_recipe .
 
     - name: Run usercenter container
       run: docker run -d -p 8080:8080 usercenter 
