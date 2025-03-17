@@ -23,8 +23,11 @@ func NewRecipeListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Recipe
 	}
 }
 
-func (l *RecipeListLogic) RecipeList(req *types.RecipeListReq) (resp *types.RecipeListResp, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+// GetIngredientsByRecipe retrieves all ingredients for a given recipe.
+func (m *RecipeDetailsModel) GetIngredientsByRecipe(ctx context.Context, recipeID int64) ([]Ingredient, error) {
+	var ingredients []Ingredient
+	query := "SELECT id, recipe_id, name, quantity, created_at FROM ingredients WHERE recipe_id = ?"
+	err := m.conn.QueryRowsCtx(ctx, &ingredients, query, recipeID)
+	return ingredients, err
+}
 }

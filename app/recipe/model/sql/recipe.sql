@@ -6,7 +6,7 @@ create table `recipes` (
     id          bigint not null auto_increment,
     user_id     bigint not null,
     name        varchar(64) not null,
-    description varchar(512),
+    description varchar(550),
     created_at  timestamp default current_timestamp,
     updated_at  timestamp default current_timestamp on update current_timestamp,
 
@@ -19,11 +19,11 @@ create table `ingredients` (
     id          bigint not null auto_increment,
     recipe_id   bigint not null,
     name        varchar(64) not null,
-    quantity    varchar(64),
+    quantity    decimal(10,2),
     created_at  timestamp default current_timestamp,
     updated_at  timestamp default current_timestamp on update current_timestamp,
 
-    primary key (id),
-    unique key index_recipe (recipe_id)
+    PRIMARY KEY (id),
+    INDEX idx_recipe (recipe_id), -- Allows multiple ingredients per recipe
+    FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
-
