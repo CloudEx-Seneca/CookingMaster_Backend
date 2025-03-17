@@ -6,6 +6,12 @@ import (
 )
 
 // ListRecipes returns all recipes in the database (publicly accessible).
+// @Summary List all recipes
+// @Description Retrieve all recipes with their ingredients.
+// @Tags recipe
+// @Produce json
+// @Success 200 {object} common.Response
+// @Router /list [get]
 func ListRecipes(c *gin.Context) {
 	var recipes []Recipe
 	if err := db.Preload("Ingredients").Find(&recipes).Error; err != nil {

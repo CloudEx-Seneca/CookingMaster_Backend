@@ -19,6 +19,13 @@ type RecipeSearchResponse struct {
 
 // SearchRecipe searches recipes by a list of ingredient names provided as a comma-separated string.
 // It returns recipes that have at least one matching ingredient along with a list of missing ingredients.
+// @Summary Search recipes by ingredients
+// @Description Search recipes by a comma-separated list of ingredient names. Returns matching recipes with missing ingredients.
+// @Tags recipe
+// @Produce json
+// @Param ingredients query string true "Comma-separated ingredient names"
+// @Success 200 {object} common.Response
+// @Router /search [get]
 func SearchRecipe(c *gin.Context) {
 	var input RecipeSearchInput
 	if err := c.ShouldBindQuery(&input); err != nil {

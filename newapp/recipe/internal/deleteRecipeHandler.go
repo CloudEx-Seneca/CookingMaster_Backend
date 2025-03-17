@@ -11,6 +11,15 @@ type RecipeDeleteInput struct {
 }
 
 // DeleteRecipe deletes a recipe and clears its join table connections.
+// @Summary Delete a recipe
+// @Description Delete a recipe and its ingredient associations.
+// @Tags recipe
+// @Accept json
+// @Produce json
+// @Param recipe body RecipeDeleteInput true "Recipe deletion payload"
+// @Success 200 {object} common.Response
+// @Security BearerAuth
+// @Router /delete [post]
 func DeleteRecipe(c *gin.Context) {
 	// This endpoint requires JWT to ensure only the creator can delete.
 	userID := c.MustGet("user_id").(uint)

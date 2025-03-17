@@ -15,6 +15,15 @@ type RecipeCreateInput struct {
 
 // CreateRecipe handles recipe creation.
 // It uses JWT to set the UserID and creates the recipe along with its ingredient relations.
+// @Summary Create a new recipe
+// @Description Create a recipe with name, description and list of ingredients. UserID is set from JWT.
+// @Tags recipe
+// @Accept json
+// @Produce json
+// @Param recipe body RecipeCreateInput true "Recipe creation payload"
+// @Success 200 {object} common.Response
+// @Security BearerAuth
+// @Router /create [post]
 func CreateRecipe(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
 	var input RecipeCreateInput

@@ -14,6 +14,15 @@ type RecipeUpdateInput struct {
 }
 
 // UpdateRecipe updates the recipe and its ingredient associations.
+// @Summary Update a recipe
+// @Description Update recipe details and its ingredient associations.
+// @Tags recipe
+// @Accept json
+// @Produce json
+// @Param recipe body RecipeUpdateInput true "Recipe update payload"
+// @Success 200 {object} common.Response
+// @Security BearerAuth
+// @Router /update [post]
 func UpdateRecipe(c *gin.Context) {
 	// This endpoint still requires JWT to ensure only the creator can update.
 	userID := c.MustGet("user_id").(uint)

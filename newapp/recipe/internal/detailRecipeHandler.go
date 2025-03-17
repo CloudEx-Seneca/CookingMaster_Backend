@@ -11,6 +11,13 @@ type RecipeDetailInput struct {
 }
 
 // RecipeDetail returns a single recipe (with ingredients) for the given recipe id.
+// @Summary Get recipe detail
+// @Description Get detailed information of a recipe by its ID.
+// @Tags recipe
+// @Produce json
+// @Param recipe_id query int true "Recipe ID"
+// @Success 200 {object} common.Response
+// @Router /detail [get]
 func RecipeDetail(c *gin.Context) {
 	var input RecipeDetailInput
 	if err := c.ShouldBindQuery(&input); err != nil {
