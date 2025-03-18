@@ -15,12 +15,11 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 # Function to add an item to the shopping list
-def add_to_shopping_list(user_id, ingredient_id, quantity):
+def add_to_shopping_list(user_id, ingredient_id):
     query = """
-    INSERT INTO shopping_list_items (user_id, ingredient_id, quantity)
+    INSERT INTO shopping_list_items (user_id, ingredient_id)
     VALUES (%s, %s, %s)
-    ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
     """
-    cursor.execute(query, (user_id, ingredient_id, quantity))
+    cursor.execute(query, (user_id, ingredient_id))
     db.commit()
     print("Item added to shopping list.")
