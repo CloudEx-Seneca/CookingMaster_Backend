@@ -24,4 +24,4 @@ def get_shopping_list(user_id):
     cursor.execute(query, (user_id,))
     items = cursor.fetchall()
     for item in items:
-        print(f"{item[0]} - {item[1]} units")
+        print(f"{item[0]}")
