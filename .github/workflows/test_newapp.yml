@@ -20,9 +20,9 @@ jobs:
       run: docker build --tag recipe -f Dockerfile_recipe .
 
     - name: create docker network, run db
-      run: 
-        docker network create app_network \
-        docker run -d --name usercenter-db --network app_network -e MYSQL_ROOT_PASSWORD=pw  henry071190/usercenter-db:newapp  \      
+      run: |
+        docker network create app_network
+        docker run -d --name usercenter-db --network app_network -e MYSQL_ROOT_PASSWORD=pw  henry071190/usercenter-db:newapp      
         docker run -d --name recipe-db --network app_network -e MYSQL_ROOT_PASSWORD=pw  henry071190/recipe-db:newapp
     
     - name: Run usercenter container
