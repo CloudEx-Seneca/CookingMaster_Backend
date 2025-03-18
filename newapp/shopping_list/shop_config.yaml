@@ -1,0 +1,5 @@
+db:
+  host: "localhost"
+  user: "root"
+  password: "Pa$$w0rd1234"
+  database: "shopping_list"
