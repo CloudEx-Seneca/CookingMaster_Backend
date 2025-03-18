@@ -17,7 +17,7 @@ cursor = db.cursor()
 # Function to display a user's shopping list
 def get_shopping_list(user_id):
     query = """
-    SELECT i.name, s.quantity FROM shopping_list_items s
+    SELECT i.name FROM shopping_list_items s
     JOIN recipe.ingredients i ON s.ingredient_id = i.id
     WHERE s.user_id = %s
     """
