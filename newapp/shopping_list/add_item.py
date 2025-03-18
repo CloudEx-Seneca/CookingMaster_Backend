@@ -18,7 +18,7 @@ cursor = db.cursor()
 def add_to_shopping_list(user_id, ingredient_id):
     query = """
     INSERT INTO shopping_list_items (user_id, ingredient_id)
-    VALUES (%s, %s, %s)
+    VALUES (%s, %s)
     """
     cursor.execute(query, (user_id, ingredient_id))
     db.commit()
