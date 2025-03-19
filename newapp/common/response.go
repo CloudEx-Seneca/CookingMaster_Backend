@@ -2,7 +2,6 @@ package common
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 // Response defines the professional JSON response format.
@@ -12,9 +11,10 @@ type Response struct {
 	Data    interface{} `json:"data"`    // result payload (if any)
 }
 
-// respondJSON sends a JSON response with the specified code, message, and data.
+// RespondJSON sends a JSON response with the specified code, message, and data.
 func RespondJSON(c *gin.Context, code int, message string, data interface{}) {
-	c.JSON(http.StatusOK, Response{
+	// Use the 'code' parameter to set the correct HTTP status code
+	c.JSON(code, Response{
 		Code:    code,
 		Message: message,
 		Data:    data,
