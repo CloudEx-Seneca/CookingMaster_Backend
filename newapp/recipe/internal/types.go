@@ -18,7 +18,7 @@ type RecipeIngredient struct {
     RecipeID    uint `gorm:"primaryKey;not null"`
     IngredientID uint `gorm:"primaryKey;not null"`
     Recipe      Recipe    `gorm:"foreignKey:RecipeID;references:ID"`
-    Ingredient  Ingredient `gorm:"foreignKey:IngredientID;references:ID"
+    Ingredient  Ingredient `gorm:"foreignKey:IngredientID;references:ID"`
 }
 
 // Ingredient represents an ingredient entity.
