@@ -39,10 +39,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	// Generate the JWT token
 	token, err := generateJWT(user.ID, user.Email)
 	if err != nil {
 		common.RespondJSON(c, 500, "Failed to generate token", nil)
 		return
 	}
-	common.RespondJSON(c, 200, "Login successful", gin.H{"token": token})
+
+	// Respond with token and user ID
+	common.RespondJSON(c, 200, "Login successful", gin.H{
+		"token":  token,
+		"user_id": user.ID,  // Add the user ID here
+	})
 }

@@ -11,6 +11,7 @@ type RecipeCreateInput struct {
 	Name        string   `json:"name" binding:"required"`
 	Description string   `json:"description" binding:"required"`
 	Ingredients []string `json:"ingredients" binding:"required"` // list of ingredient names
+	Image		string   `json:"image" binding:"required"`
 }
 
 // CreateRecipe handles recipe creation.
@@ -45,6 +46,7 @@ func CreateRecipe(c *gin.Context) {
 		Description: input.Description,
 		UserID:      userID,
 		Ingredients: ingredients,
+		Image: input.Image,
 	}
 	if err := db.Create(&recipe).Error; err != nil {
 		common.RespondJSON(c, 500, "Failed to create recipe", nil)

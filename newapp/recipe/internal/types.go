@@ -6,9 +6,10 @@ import "time"
 type Recipe struct {
 	ID          uint         `gorm:"primaryKey" json:"id"`
 	Name        string       `gorm:"size:255" json:"name"`
-	Description string       `gorm:"size:1024" json:"description"`
+	Description string       `gorm:"size:2048" json:"description"`
 	UserID      uint         `json:"user_id"` // creator of the recipe (from JWT when created)
 	Ingredients []Ingredient `gorm:"many2many:recipe_ingredients;" json:"ingredients"`
+	Image		string		 `gorm:"size:2048" json:"image"`
 	CreatedAt   time.Time    `json:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at"`
 }

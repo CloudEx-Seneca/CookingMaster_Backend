@@ -11,6 +11,7 @@ type RecipeUpdateInput struct {
 	Name        string   `json:"name" binding:"required"`
 	Description string   `json:"description" binding:"required"`
 	Ingredients []string `json:"ingredients" binding:"required"`
+	Image		string	 `json:"image" binding:"required"`
 }
 
 // UpdateRecipe updates the recipe and its ingredient associations.
