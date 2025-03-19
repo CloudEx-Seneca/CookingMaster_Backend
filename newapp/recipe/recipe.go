@@ -30,7 +30,7 @@ func main() {
 
 		// Public endpoints for reading recipes.
 		api.GET("/list", internal.ListRecipes)
-		api.GET("/detail", internal.RecipeDetail)
+		api.GET("/detail/:id", internal.RecipeDetail) 
 
 		// Public search endpoint.
 		api.GET("/search", internal.SearchRecipe)

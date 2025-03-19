@@ -3,32 +3,38 @@ package internal
 import (
 	"CookingMaster_Backend/newapp/common"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
-
-// RecipeDetailInput is the payload for recipe detail query.
-type RecipeDetailInput struct {
-	RecipeID uint `form:"recipe_id" binding:"required"` // using query parameter for GET
-}
 
 // RecipeDetail returns a single recipe (with ingredients) for the given recipe id.
 // @Summary Get recipe detail
 // @Description Get detailed information of a recipe by its ID.
 // @Tags recipe
 // @Produce json
-// @Param recipe_id query int true "Recipe ID"
+// @Param id path int true "Recipe ID"  // Changed to path parameter
 // @Success 200 {object} common.Response
-// @Router /detail [get]
+// @Failure 400 {object} common.Response
+// @Failure 404 {object} common.Response
+// @Router /detail/{id} [get]
 func RecipeDetail(c *gin.Context) {
-	var input RecipeDetailInput
-	if err := c.ShouldBindQuery(&input); err != nil {
-		common.RespondJSON(c, 400, err.Error(), nil)
+	// Get the 'id' from the URL path
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)  // Convert string ID to integer
+	if err != nil {
+		// If conversion fails, return a bad request error
+		common.RespondJSON(c, http.StatusBadRequest, "Invalid Recipe ID format", nil)
 		return
 	}
 
+	// Fetch the recipe from the database based on the ID
 	var recipe Recipe
-	if err := db.Where("id = ?", input.RecipeID).Preload("Ingredients").First(&recipe).Error; err != nil {
-		common.RespondJSON(c, 404, "Recipe not found", nil)
+	if err := db.Where("id = ?", id).Preload("Ingredients").First(&recipe).Error; err != nil {
+		// If no recipe is found, return a not found error
+		common.RespondJSON(c, http.StatusNotFound, "Recipe not found", nil)
 		return
 	}
-	common.RespondJSON(c, 200, "Recipe detail", recipe)
+
+	// Return the recipe details
+	common.RespondJSON(c, http.StatusOK, "Recipe detail retrieved successfully", recipe)
 }
