@@ -9,6 +9,7 @@ import (
 
 // RegisterInput defines the expected parameters for user registration.
 type RegisterInput struct {
+	Nickname string `json:"nickname" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
@@ -46,6 +47,7 @@ func Register(c *gin.Context) {
 	user = User{
 		Email:    input.Email,
 		Password: hashedPassword,
+		Nickname: input.Nickname,
 	}
 	if err := db.Create(&user).Error; err != nil {
 		common.RespondJSON(c, 500, "Failed to create user", nil)
