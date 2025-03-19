@@ -10,6 +10,7 @@ type ProfileUpdateInput struct {
 	Nickname string `json:"nickname" binding:"required"`
 	Sex      string `json:"sex" binding:"required"`
 	Info     string `json:"info"`
+	AvatarUrl string `json:"avatar_url"`
 }
 
 // UpdateProfile updates the authenticated user's profile.
@@ -39,6 +40,7 @@ func UpdateProfile(c *gin.Context) {
 	user.Nickname = input.Nickname
 	user.Sex = input.Sex
 	user.Info = input.Info
+	user.AvatarUrl = input.AvatarUrl
 	if err := db.Save(&user).Error; err != nil {
 		common.RespondJSON(c, 500, "Failed to update profile", nil)
 		return
