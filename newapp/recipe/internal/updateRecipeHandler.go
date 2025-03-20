@@ -42,6 +42,7 @@ func UpdateRecipe(c *gin.Context) {
 	// Update basic fields.
 	recipe.Name = input.Name
 	recipe.Description = input.Description
+	recipe.Image = input.Image
 
 	// Process new ingredient list.
 	newIngredients, err := findOrCreateIngredients(input.Ingredients)
