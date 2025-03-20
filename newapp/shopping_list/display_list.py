@@ -26,3 +26,6 @@ def get_shopping_list(user_id):
     items = cursor.fetchall()
     for item in items:
         print(f"{item[0]}")
+
+if __name__ == "__main__":
+    app.run(debug=True)
