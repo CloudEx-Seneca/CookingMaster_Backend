@@ -15,8 +15,12 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 # Function to delete an ingredient from the shopping list
+@app.route("/remove_item", methods=["POST"])
 def del_item(user_id, ingredient_id):
     query = "DELETE FROM shopping_list_items WHERE user_id = %s AND ingredient_id = %s"
     cursor.execute(query, (user_id, ingredient_id))
     db.commit()
     print("Ingredient removed from shopping list.")
+    
+if __name__ == "__main__":
+    app.run(debug=True)
