@@ -40,7 +40,7 @@ func Login(c *gin.Context) {
 	}
 
 	// Generate the JWT token
-	token, err := generateJWT(user.ID, user.Email)
+	token, err := generateJWT(user.ID, user.Email, user.Nickname)
 	if err != nil {
 		common.RespondJSON(c, 500, "Failed to generate token", nil)
 		return

@@ -20,10 +20,11 @@ func checkPasswordHash(password, hash string) bool {
 }
 
 // generateJWT generates a JWT token with user_id and email claims.
-func generateJWT(userID uint, email string) (string, error) {
+func generateJWT(userID uint, email string, nickname string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"email":   email,
+		"nickname": nickname,
 		"exp":     time.Now().Add(720 * time.Hour).Unix(), // token expires in 720 hours
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

@@ -27,6 +27,7 @@ type RecipeCreateInput struct {
 // @Router /create [post]
 func CreateRecipe(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
+	nickname := c.MustGet("nickname").(string)
 	var input RecipeCreateInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		common.RespondJSON(c, 400, err.Error(), nil)
@@ -47,6 +48,7 @@ func CreateRecipe(c *gin.Context) {
 		UserID:      userID,
 		Ingredients: ingredients,
 		Image: input.Image,
+		Author: nickname,
 	}
 	if err := db.Create(&recipe).Error; err != nil {
 		common.RespondJSON(c, 500, "Failed to create recipe", nil)

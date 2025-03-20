@@ -12,6 +12,7 @@ type Recipe struct {
 	Image		string		 `gorm:"size:2048" json:"image"`
 	CreatedAt   time.Time    `json:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at"`
+	Author		string		 `gorm:"size:255" json:"author"`
 }
 
 // Add foreign key struct for recipe_ingredients

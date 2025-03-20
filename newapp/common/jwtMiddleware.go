@@ -10,7 +10,7 @@ import (
 // JWT secret – in production, store securely.
 var JWT_SECRET = []byte("mysecretkey")
 
-// JWTAuthMiddleware validates the token and sets the user_id in the context.
+// JWTAuthMiddleware validates the token and sets the user_id and nickname in the context.
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -44,13 +44,27 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+
+		// Extract user_id from token claims.
 		userID, ok := claims["user_id"].(float64)
 		if !ok {
 			RespondJSON(c, 401, "Invalid token user_id", nil)
 			c.Abort()
 			return
 		}
+
+		// Extract nickname from token claims.
+		nickname, ok := claims["nickname"].(string)
+		if !ok {
+			RespondJSON(c, 401, "Invalid token nickname", nil)
+			c.Abort()
+			return
+		}
+
+		// Set user_id and nickname in the context.
 		c.Set("user_id", uint(userID))
+		c.Set("nickname", nickname)
+
 		c.Next()
 	}
 }
