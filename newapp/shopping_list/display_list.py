@@ -15,6 +15,7 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 # Function to display a user's shopping list
+@app.route("/get_list/<int:user_id>", methods=["GET"])
 def get_shopping_list(user_id):
     query = """
     SELECT i.name FROM shopping_list_items s
