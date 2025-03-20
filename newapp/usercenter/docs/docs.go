@@ -49,6 +49,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/namemap": {
+            "post": {
+                "description": "Given a list of user IDs, returns a map with each user ID as key and the corresponding user name as value.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "usercenter"
+                ],
+                "summary": "Get user name map",
+                "parameters": [
+                    {
+                        "description": "List of user IDs",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal.UserNameMapInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/profile": {
             "get": {
                 "security": [
@@ -185,6 +219,9 @@ const docTemplate = `{
                 "sex"
             ],
             "properties": {
+                "avatar_url": {
+                    "type": "string"
+                },
                 "info": {
                     "type": "string"
                 },
@@ -200,14 +237,33 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
+                "nickname",
                 "password"
             ],
             "properties": {
                 "email": {
                     "type": "string"
                 },
+                "nickname": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
+                }
+            }
+        },
+        "internal.UserNameMapInput": {
+            "description": "Request payload for user name map API.",
+            "type": "object",
+            "required": [
+                "user_ids"
+            ],
+            "properties": {
+                "user_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         }

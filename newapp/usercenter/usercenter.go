@@ -31,6 +31,8 @@ func main() {
 		// Profile endpoints (JWT protected)
 		api.GET("/profile", common.JWTAuthMiddleware(), internal.GetProfile)
 		api.POST("/profile", common.JWTAuthMiddleware(), internal.UpdateProfile)
+
+		api.POST("/namemap", internal.GetUserNameMap)
 	}
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
