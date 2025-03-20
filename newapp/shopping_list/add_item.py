@@ -1,3 +1,4 @@
+from flask import Flask, request, jsonify
 import mysql.connector
 import yaml
 
@@ -15,6 +16,7 @@ db = mysql.connector.connect(
 cursor = db.cursor()
 
 # Function to add an item to the shopping list
+@app.route("/add_item", methods=["POST"])
 def add_to_shopping_list(user_id, ingredient_id):
     query = """
     INSERT INTO shopping_list_items (user_id, ingredient_id)
@@ -23,3 +25,6 @@ def add_to_shopping_list(user_id, ingredient_id):
     cursor.execute(query, (user_id, ingredient_id))
     db.commit()
     print("Item added to shopping list.")
+
+if __name__ == "__main__":
+    app.run(debug=True)
