@@ -10,3 +10,5 @@ mysql -u root -p < shopping_list.sql
 python add_item.py
 python display_list.py
 python del_item.py
+
+# Add for test
