@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS shopping_list_items (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     ingredient_id BIGINT NOT NULL,
+    ingredient varchar(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
