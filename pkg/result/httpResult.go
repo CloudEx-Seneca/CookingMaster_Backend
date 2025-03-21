@@ -3,12 +3,32 @@ package result
 import (
 	"CookingMaster_Backend/pkg/xerr"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"google.golang.org/grpc/status"
 	"net/http"
 )
+
+func GinResult(c *gin.Context, code int, resp interface{}, err error) {
+	if err != nil {
+		r := Success(resp)
+		c.JSON(code, r)
+	} else {
+		errCode := xerr.SERVER_COMMON_ERROR
+		errMsg := xerr.MapErrMsg(xerr.SERVER_COMMON_ERROR)
+		causeErr := errors.Cause(err)
+		if e, ok := causeErr.(*xerr.CodeError); ok {
+			errCode = e.GetErrCode()
+			errMsg = e.GetErrMsg()
+			c.JSON(code, Error(errCode, errMsg))
+		} else {
+			fullErrMsg := fmt.Sprintf("%s, %s", errMsg, err.Error())
+			c.JSON(code, Error(errCode, fullErrMsg))
+		}
+	}
+}
 
 func HttpResult(r *http.Request, w http.ResponseWriter, resp interface{}, err error) {
 	if err == nil {
@@ -32,11 +52,17 @@ func HttpResult(r *http.Request, w http.ResponseWriter, resp interface{}, err er
 		}
 
 		logx.WithContext(r.Context()).Errorf("API ERR: %+v", err)
-		httpx.WriteJson(w, http.StatusBadRequest, Error(errCode, errMsg))
+		fullErrMsg := fmt.Sprintf("%s, %s", errMsg, err.Error())
+		httpx.WriteJson(w, http.StatusBadRequest, Error(errCode, fullErrMsg))
 	}
 }
 
 func ParamErrorResult(r *http.Request, w http.ResponseWriter, err error) {
 	errMsg := fmt.Sprintf("%s, %s", xerr.MapErrMsg(xerr.REQUEST_PARAM_ERROR), err.Error())
 	httpx.WriteJson(w, http.StatusBadRequest, Error(xerr.REQUEST_PARAM_ERROR, errMsg))
+}
+
+func DBErrorResult(r *http.Request, w http.ResponseWriter, err error) {
+	errMsg := fmt.Sprintf("%s, %s", xerr.MapErrMsg(xerr.DB_ERROR), err.Error())
+	httpx.WriteJson(w, http.StatusBadRequest, Error(xerr.DB_ERROR, errMsg))
 }

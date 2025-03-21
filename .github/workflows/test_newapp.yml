@@ -1,0 +1,54 @@
+name: Test Docker Image
+
+on:
+  push:
+    paths: ["newapp/**"]
+    branches: [ "newapp" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build Usercenter Docker image
+      run: docker build --tag usercenter -f Dockerfile_usercenter .
+
+    - name: Build Recipe Docker image
+      run: docker build --tag recipe -f Dockerfile_recipe .
+
+    - name: create docker network, run db
+      run: |
+        docker network create app_network
+        docker run -d --name usercenter-db --network app_network -e MYSQL_ROOT_PASSWORD=pw  henry071190/usercenter-db:newapp      
+        docker run -d --name recipe-db --network app_network -e MYSQL_ROOT_PASSWORD=pw  henry071190/recipe-db:newapp
+    
+    - name: Run usercenter container
+      run: docker run -d --name usercenter --network app_network -p 8080:8080 -e SERVER_PORT=":8080" -e DB_HOST=usercenter-db -e MYSQL_ROOT_PASSWORD=pw henry071190/usercenter:newapp
+ 
+
+    - name: Run recipe container
+      run: docker run -d --name recipe --network app_network -p 8081:8081 -e SERVER_PORT=":8081" -e DB_HOST=recipe-db -e MYSQL_ROOT_PASSWORD=pw recipe
+ 
+
+    - name: Test usercenter
+      run: |
+        docker ps
+        curl -X 'POST' \
+          'http://localhost:8080/usercenter/v2/register' \
+          -H 'accept: application/json' \
+          -H 'Content-Type: application/json' \
+          -d '{
+          "email": "a@gmail.com",
+          "password": "pw"
+        }'
+
+    - name: Test recipe
+      run: |
+        docker ps
+        curl -X 'GET' \
+          'http://localhost:8081/recipe/v2/list' \
+          -H 'accept: application/json'
+

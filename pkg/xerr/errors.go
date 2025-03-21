@@ -23,6 +23,11 @@ func NewCodeMsgError(errCode uint32, errmsg string) *CodeError {
 	return &CodeError{errCode: errCode, errMsg: errmsg}
 }
 
+func NewCodeFullError(errCode uint32, err error) *CodeError {
+	errFullMsg := fmt.Sprintf("%s:%s", MapErrMsg(errCode), err.Error())
+	return &CodeError{errCode: errCode, errMsg: errFullMsg}
+}
+
 func NewCodeError(errCode uint32) *CodeError {
 	return &CodeError{errCode: errCode, errMsg: MapErrMsg(errCode)}
 }

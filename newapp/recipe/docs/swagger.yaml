@@ -1,0 +1,187 @@
+definitions:
+  common.Response:
+    properties:
+      code:
+        description: e.g., 200 for success, 400/500 for errors
+        type: integer
+      data:
+        description: result payload (if any)
+      message:
+        description: descriptive message
+        type: string
+    type: object
+  internal.RecipeCreateInput:
+    properties:
+      description:
+        type: string
+      ingredients:
+        description: list of ingredient names
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+    required:
+    - description
+    - ingredients
+    - name
+    type: object
+  internal.RecipeDeleteInput:
+    properties:
+      recipe_id:
+        type: integer
+    required:
+    - recipe_id
+    type: object
+  internal.RecipeUpdateInput:
+    properties:
+      description:
+        type: string
+      ingredients:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      recipe_id:
+        type: integer
+    required:
+    - description
+    - ingredients
+    - name
+    - recipe_id
+    type: object
+info:
+  contact: {}
+paths:
+  /create:
+    post:
+      consumes:
+      - application/json
+      description: Create a recipe with name, description and list of ingredients.
+        UserID is set from JWT.
+      parameters:
+      - description: Recipe creation payload
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/internal.RecipeCreateInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a new recipe
+      tags:
+      - recipe
+  /delete:
+    post:
+      consumes:
+      - application/json
+      description: Delete a recipe and its ingredient associations.
+      parameters:
+      - description: Recipe deletion payload
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/internal.RecipeDeleteInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: Delete a recipe
+      tags:
+      - recipe
+  /detail:
+    get:
+      description: Get detailed information of a recipe by its ID.
+      parameters:
+      - description: Recipe ID
+        in: query
+        name: recipe_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Get recipe detail
+      tags:
+      - recipe
+  /list:
+    get:
+      description: Retrieve all recipes with their ingredients.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: List all recipes
+      tags:
+      - recipe
+  /search:
+    get:
+      description: Search recipes by a comma-separated list of ingredient names. Returns
+        matching recipes with missing ingredients.
+      parameters:
+      - description: Comma-separated ingredient names
+        in: query
+        name: ingredients
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: Search recipes by ingredients
+      tags:
+      - recipe
+  /update:
+    post:
+      consumes:
+      - application/json
+      description: Update recipe details and its ingredient associations.
+      parameters:
+      - description: Recipe update payload
+        in: body
+        name: recipe
+        required: true
+        schema:
+          $ref: '#/definitions/internal.RecipeUpdateInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: Update a recipe
+      tags:
+      - recipe
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
