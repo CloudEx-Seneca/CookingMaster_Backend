@@ -6,6 +6,9 @@ import yaml
 with open("shop_config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
+# Initialize Flask app
+app = Flask(__name__)
+
 # Connect to MySQL
 db = mysql.connector.connect(
     host=config["db"]["host"],
