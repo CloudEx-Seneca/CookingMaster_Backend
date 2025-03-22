@@ -14,7 +14,7 @@ WORKDIR /app
 
 # Copy configuration and source files
 COPY shop_config.yaml config.yaml
-COPY shopp_list.py app.py
+COPY shop_list.py app.py
 COPY shopping_list.sql shopping_list.sql
 
 # Install Python dependencies
