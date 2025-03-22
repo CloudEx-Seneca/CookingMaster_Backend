@@ -21,18 +21,17 @@ app = Flask(__name__)
 def add_to_shopping_list():
     data = request.json
     user_id = data["user_id"]
-    ingredient_id = data["ingredient_id"]
     ingredient = data["ingredient"]
 
     # Use the existing db connection to get the cursor
     cursor = db.cursor()
 
     query = """
-    INSERT INTO shopping_list_items (user_id, ingredient_id, ingredient)
-    VALUES (%s, %s, %s)
+    INSERT INTO shopping_list_items (user_id, ingredient)
+    VALUES (%s, %s)
     ON DUPLICATE KEY UPDATE ingredient = VALUES(ingredient)
     """
-    cursor.execute(query, (user_id, ingredient_id, ingredient))
+    cursor.execute(query, (user_id, ingredient))
     db.commit()
     
     # Close the cursor after executing the query
