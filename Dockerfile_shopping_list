@@ -1,0 +1,27 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set environment variables to avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary system packages
+RUN apt-get update && apt-get install -y \
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy configuration and source files
+COPY shop_config.yaml config.yaml
+COPY shopp_list.py app.py
+COPY shopping_list.sql shopping_list.sql
+
+# Install Python dependencies
+RUN pip install --no-cache-dir flask mysql-connector-python pyyaml
+
+# Expose the application port
+EXPOSE 5000
+
+# Start services and run the application
+CMD ["python", "app.py"]
