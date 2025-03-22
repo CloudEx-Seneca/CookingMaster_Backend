@@ -34,4 +34,18 @@ python shop_list.py
 ## Running functions
 ### Add Item
 
+```
+http://127.0.0.1:5000/add_item
+```
 ![image](https://github.com/user-attachments/assets/255aa6d8-0714-4e96-aeb8-47f70243b0f8)
+
+```
+http://127.0.0.1:5000/get_list/<user_id>
+```
+![image](https://github.com/user-attachments/assets/7525d82a-598e-44ff-be48-c192e3c094ba)
+
+```
+http://127.0.0.1:5000/remove_item
+```
+![image](https://github.com/user-attachments/assets/035629cd-8338-4c9f-a9a4-39a643cafe75)
+
