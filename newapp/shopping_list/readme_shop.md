@@ -4,7 +4,9 @@
 ```
 python pyyaml
 ```
+```
 python mysql-connector-python
+```
 ```
 python Flask
 ```
