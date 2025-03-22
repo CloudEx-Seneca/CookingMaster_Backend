@@ -58,13 +58,13 @@ def get_shopping_list(user_id):
 def remove_item():
     data = request.json
     user_id = data["user_id"]
-    ingredient_id = data["ingredient_id"]
+    ingredient = data["ingredient"]
 
     query = """
     DELETE FROM shopping_list_items
-    WHERE user_id = %s AND ingredient_id = %s
+    WHERE user_id = %s AND ingredient = %s
     """
-    cursor.execute(query, (user_id, ingredient_id))
+    cursor.execute(query, (user_id, ingredient))
     db.commit()
     return jsonify({"message": "Item removed from shopping list"}), 200
 
