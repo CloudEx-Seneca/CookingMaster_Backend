@@ -2,5 +2,5 @@
 
 export DB_HOST="127.0.0.1"
 export MYSQL_ROOT_PASSWORD="password"
-export SERVER_PORT=":8081"
-go run recipe.go
+export SERVER_PORT=5000
+python shop_list.py
