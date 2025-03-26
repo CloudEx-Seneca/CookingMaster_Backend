@@ -1,23 +1,38 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim
 
-# Set environment variables to avoid interactive prompts
-ENV DEBIAN_FRONTEND=noninteractive
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    FLASK_APP=shop_list.py \
+    FLASK_ENV=production
 
 # Install necessary system packages
-RUN apt-get update && apt-get install -y
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    gcc \
+    python3-dev \
+    default-libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy configuration and source files
-COPY ./newapp/shopping_list /app
+# Copy requirements first to leverage Docker cache
+COPY ./newapp/shopping_list/requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir flask mysql-connector-python pyyaml flask-cors
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application
+COPY ./newapp/shopping_list/ .
 
 # Expose the application port
 EXPOSE 5000
 
-# Start services and run the application
-CMD ["python", "shop_list.py"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:5000/shoppinglist/v1/get_list/1 || exit 1
+
+# Run the application
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "shop_list:app"]
