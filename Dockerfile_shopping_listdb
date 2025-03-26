@@ -2,4 +2,4 @@ FROM mysql:8.0
 
 COPY ./newapp/shopping_list/shopping_list.sql /tmp
 
-CMD [ "mysqld", "--init-file=/tmp/recipe.sql" ]
+CMD [ "mysqld", "--init-file=/tmp/shopping_list.sql" ]

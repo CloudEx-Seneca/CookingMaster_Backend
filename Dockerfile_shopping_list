@@ -5,23 +5,19 @@ FROM python:3.9-slim
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install necessary system packages
-RUN apt-get update && apt-get install -y \
-    default-mysql-client \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy configuration and source files
-COPY shop_config.yaml config.yaml
-COPY shop_list.py app.py
-COPY shopping_list.sql shopping_list.sql
+COPY ./newapp/shopping_list /app
 
 # Install Python dependencies
-RUN pip install --no-cache-dir flask mysql-connector-python pyyaml
+RUN pip install --no-cache-dir flask mysql-connector-python pyyaml flask-cors
 
 # Expose the application port
 EXPOSE 5000
 
 # Start services and run the application
-CMD ["python", "app.py"]
+CMD ["python", "shop_list.py"]
