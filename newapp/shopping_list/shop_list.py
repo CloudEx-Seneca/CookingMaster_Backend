@@ -82,7 +82,7 @@ def add_to_shopping_list():
         return jsonify({"message": f"Error: {err}"}), 500
 
 # Route to get items from the shopping list
-@app.route("/shoppinglist/v1/list/<int:user_id>", methods=["GET"])
+@app.route("/shoppinglist/v1/get_list/<int:user_id>", methods=["GET"])
 def get_shopping_list(user_id):
     try:
         query = "SELECT ingredient FROM shopping_list_items WHERE user_id = %s"
