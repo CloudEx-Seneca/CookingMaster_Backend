@@ -9,7 +9,7 @@ import yaml
 def load_db_config():
     db_config = {
         'host': os.getenv('DB_HOST'),
-        'password': os.getenv('DB_PASSWORD')
+        'password': os.getenv('MYSQL_ROOT_PASSWORD')
     }
 
     return db_config
