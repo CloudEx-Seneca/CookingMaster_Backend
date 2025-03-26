@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Importing CORS
 import mysql.connector
 from mysql.connector import errorcode
 import yaml
 
 # Load database config
-with open("config.yaml", "r") as file:
+with open("shop_config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 # Connect to MySQL
@@ -26,6 +27,9 @@ except mysql.connector.Error as err:
 
 app = Flask(__name__)
 
+# Enable CORS for the Flask app
+CORS(app)  # This will allow all domains by default, you can specify specific domains if needed.
+
 # Create a cursor before every request
 @app.before_request
 def create_cursor():
@@ -39,7 +43,7 @@ def close_cursor(exception=None):
     if cursor:
         cursor.close()
 
-@app.route("/add_item", methods=["POST"])
+@app.route("/shoppinglist/v1/add_item", methods=["POST"])
 def add_to_shopping_list():
     data = request.json
     user_id = data.get("user_id")
@@ -63,7 +67,7 @@ def add_to_shopping_list():
         db.rollback()
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route("/get_list/<int:user_id>", methods=["GET"])
+@app.route("/shoppinglist/v1/get_list/<int:user_id>", methods=["GET"])
 def get_shopping_list(user_id):
     try:
         query = """
@@ -72,14 +76,11 @@ def get_shopping_list(user_id):
         cursor.execute(query, (user_id,))
         items = [item[0] for item in cursor.fetchall()]
         
-        if not items:
-            return jsonify({"message": "No items found for this user"}), 404
-        
         return jsonify(items), 200
     except mysql.connector.Error as err:
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route("/remove_item", methods=["POST"])
+@app.route("/shoppinglist/v1/remove_item", methods=["POST"])
 def remove_item():
     data = request.json
     user_id = data.get("user_id")
