@@ -116,5 +116,5 @@ def remove_item():
 # Run the app
 if __name__ == "__main__":
     # Get the port from the environment variable or default to 5000
-    port = int(os.getenv("PORT", 5000))
+    port = int(os.getenv("SERVER_PORT", 5000))
     app.run(debug=True, port=port)
