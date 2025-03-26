@@ -2,13 +2,10 @@
 ## Install dependences (mysql, flask, python)
 
 ```
-python pyyaml
-```
-```
-python mysql-connector-python
-```
-```
-python Flask
+pyyaml
+mysql-connector-python
+flask
+flask-cors
 ```
 ## Initialize database
 
@@ -35,17 +32,17 @@ python shop_list.py
 ### Add Item
 
 ```
-http://127.0.0.1:5000/add_item
+http://127.0.0.1:5000/shoppinglist/v1/add_item
 ```
 ![image](https://github.com/user-attachments/assets/255aa6d8-0714-4e96-aeb8-47f70243b0f8)
 
 ```
-http://127.0.0.1:5000/get_list/<user_id>
+http://127.0.0.1:5000/shoppinglist/v1/get_list/<user_id>
 ```
 ![image](https://github.com/user-attachments/assets/7525d82a-598e-44ff-be48-c192e3c094ba)
 
 ```
-http://127.0.0.1:5000/remove_item
+http://127.0.0.1:5000/shoppinglist/v1/remove_item
 ```
 ![image](https://github.com/user-attachments/assets/035629cd-8338-4c9f-a9a4-39a643cafe75)
 
