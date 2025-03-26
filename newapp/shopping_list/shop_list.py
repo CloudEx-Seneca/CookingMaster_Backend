@@ -43,7 +43,7 @@ def close_cursor(exception=None):
     if cursor:
         cursor.close()
 
-@app.route("/shoppinglist/v1/add_item", methods=["POST"])
+@app.route("/shoppinglist/v1/items", methods=["POST"])
 def add_to_shopping_list():
     data = request.json
     user_id = data.get("user_id")
@@ -67,7 +67,7 @@ def add_to_shopping_list():
         db.rollback()
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route("/shoppinglist/v1/get_list/<int:user_id>", methods=["GET"])
+@app.route("/shoppinglist/v1/list/<int:user_id>", methods=["GET"])
 def get_shopping_list(user_id):
     try:
         query = """
@@ -80,7 +80,7 @@ def get_shopping_list(user_id):
     except mysql.connector.Error as err:
         return jsonify({"message": f"Error: {err}"}), 500
 
-@app.route("/shoppinglist/v1/remove_item", methods=["POST"])
+@app.route("/shoppinglist/v1/remove", methods=["POST"])
 def remove_item():
     data = request.json
     user_id = data.get("user_id")
